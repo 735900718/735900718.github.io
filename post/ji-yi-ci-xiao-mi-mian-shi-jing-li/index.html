@@ -2,11 +2,11 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>记一次小米面试经历 | Gridea</title>
-<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603173466679">
+<title>记一次小米面试经历 | 前端小白的奇幻旅程</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603179350932">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://735900718.github.io/styles/main.css?v=1603173466679">
-<link rel="alternate" type="application/atom+xml" title="记一次小米面试经历 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css?v=1603179350932">
+<link rel="alternate" type="application/atom+xml" title="记一次小米面试经历 | 前端小白的奇幻旅程 - Atom Feed" href="https://735900718.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -27,13 +27,13 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://735900718.github.io">
-  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603173466679" alt="">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603179350932" alt="">
   </a>
   <h1 class="site-title">
-    Gridea
+    前端小白的奇幻旅程
   </h1>
   <p class="site-description">
-    温故而知新
+    
   </p>
   <div class="menu-container">
     
@@ -215,9 +215,35 @@ setData(data, 0);
         
 
         
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ddab3c93d1cfbce07526',
+    clientSecret: '89181491e9ac9342ca7adf45f2d498dc42e02ab5',
+    repo: '735900718.github.io',
+    owner: '735900718',
+    admin: ['735900718'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
 
         <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  
   <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
