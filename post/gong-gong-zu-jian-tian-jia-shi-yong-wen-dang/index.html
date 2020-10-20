@@ -1,0 +1,264 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>公共组件添加使用文档 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="公共组件添加使用文档 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="首先组件是发布在gitlab上的，和github一样，项目都可以上传Readme.md文件用来添加项目说明。
+
+所以本次任务主要是对markdown文件(以下统称md)的运用，因为一直在使用hexo写文章，所以对md的基本运用还是比较熟练的..." />
+    <meta name="keywords" content="md" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              公共组件添加使用文档
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-09-27
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/t1Dps2jO9/" class="post-tag">
+                  # md
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>首先组件是发布在gitlab上的，和github一样，项目都可以上传Readme.md文件用来添加项目说明。</p>
+<!-- more -->
+<p>所以本次任务主要是对markdown文件(以下统称md)的运用，因为一直在使用hexo写文章，所以对md的基本运用还是比较熟练的。</p>
+<blockquote>
+<p>为什么要使用md：可以使用易读易写的纯文本格式编写文档，然后转换成有效的 HTML 文档。</p>
+</blockquote>
+<p>既然是转化成html，对于前端开发来说，对比着标签学习是再合适不过的了。</p>
+<p>这里总结一下md的基本格式对应的html标签：</p>
+<table>
+<thead>
+<tr>
+<th>md</th>
+<th>html</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#</code></td>
+<td><code>h1</code>(每个#都是一个锚点)</td>
+</tr>
+<tr>
+<td><code>##</code></td>
+<td><code>h2</code></td>
+</tr>
+<tr>
+<td><code>###</code></td>
+<td><code>h3</code></td>
+</tr>
+<tr>
+<td><code>####</code></td>
+<td><code>h4</code></td>
+</tr>
+<tr>
+<td><code>#####</code></td>
+<td><code>h5</code></td>
+</tr>
+<tr>
+<td><code>######</code></td>
+<td><code>h6</code></td>
+</tr>
+<tr>
+<td><code>*word*</code></td>
+<td><code>&lt;i&gt;word&lt;/i&gt;</code></td>
+</tr>
+<tr>
+<td><code>**word**</code></td>
+<td><code>&lt;b&gt;word&lt;/b&gt;</code></td>
+</tr>
+<tr>
+<td><code>~~word~~</code></td>
+<td><code>&lt;s&gt;word&lt;/s&gt;</code></td>
+</tr>
+<tr>
+<td><code>++word++</code></td>
+<td><code>&lt;u&gt;word&lt;/u&gt;</code></td>
+</tr>
+<tr>
+<td><code>---</code></td>
+<td><code>hr</code></td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td><code>blockquote</code></td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td><code>ul</code></td>
+</tr>
+<tr>
+<td><code>1.</code></td>
+<td><code>ol</code></td>
+</tr>
+<tr>
+<td><code>![图片名称](图片地址)</code></td>
+<td><code>img</code></td>
+</tr>
+<tr>
+<td><code>[链接名称](连接地址)</code></td>
+<td><code>a</code></td>
+</tr>
+</tbody>
+</table>
+<p>表格：</p>
+<pre><code>header 1 | header 2
+---|---
+row 1 col 1 | row 1 col 2
+row 2 col 1 | row 2 col 2
+
+
+&quot;--- | ---&quot;  表示默认对齐方式
+冒号的位置代表对齐的方向
+&quot;---: | ---&quot;  第一列靠右对齐，第二列默认对齐
+</code></pre>
+<p>最后推荐一个vscode上的目录生成插件<code>Markdown TOC</code></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/vue-mo-ban-yi-lai-sheng-ji-zhi-zui-xin/">
+              <h3 class="post-title">
+                vue模板依赖升级至最新
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

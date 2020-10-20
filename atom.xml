@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://735900718.github.io</id>
+    <title>Gridea</title>
+    <updated>2020-10-20T05:40:25.718Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://735900718.github.io"/>
+    <link rel="self" href="https://735900718.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://735900718.github.io/images/avatar.png</logo>
+    <icon>https://735900718.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[记一次小米面试经历]]></title>
+        <id>https://735900718.github.io/post/ji-yi-ci-xiao-mi-mian-shi-jing-li/</id>
+        <link href="https://735900718.github.io/post/ji-yi-ci-xiao-mi-mian-shi-jing-li/">
+        </link>
+        <updated>2020-10-15T05:35:28.000Z</updated>
+        <summary type="html"><![CDATA[<p>一面都没通过，语言表达不够从容，感觉很糟糕，前一天看了一大堆面试题，结果面试时脑子一团浆糊，直接看题吧</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>一面都没通过，语言表达不够从容，感觉很糟糕，前一天看了一大堆面试题，结果面试时脑子一团浆糊，直接看题吧</p>
+<!-- more -->
+<h3 id="笔试题部分">笔试题部分</h3>
+<h4 id="一维数据变树形结构">一维数据变树形结构</h4>
+<pre><code class="language-javascript">/**
+ * 将数据转换为树形结构
+ * 当parentId不为0时，将这条数据挂到id一致的数据的children中
+ */
+let data = [
+  { id: 40, parentId: 0, note: &quot;一级菜单-1&quot; },
+  { id: 20, parentId: 0, note: &quot;一级菜单-2&quot; },
+  { id: 22, parentId: 20, note: &quot;二级菜单-22&quot; },
+  { id: 24, parentId: 22, note: &quot;三级菜单-24&quot; },
+  { id: 34, parentId: 22, note: &quot;三级菜单-34&quot; },
+];
+
+function setData(data, parentId) {
+  let tree = [];
+  let temp;
+  for (let i = 0; i &lt; data.length; i++) {
+    if (data[i].parentId == parentId) {
+      let obj = data[i];
+      temp = setData(data, obj.id);
+      if (temp.length &gt; 0) {
+        obj.children = temp;
+      }
+      tree.push(obj);
+    }
+  }
+  return tree;
+}
+
+setData(data, 0);
+</code></pre>
+<h4 id="多维数据转一维数据">多维数据转一维数据</h4>
+<h4 id="事件订阅">事件订阅</h4>
+<h3 id="css-部分">CSS 部分</h3>
+<h4 id="什么是-bfc">什么是 BFC？</h4>
+<h3 id="js-部分">JS 部分</h3>
+<h4 id="什么是迭代函数">什么是迭代函数？</h4>
+<h4 id="settimeout-和-promise-等的函数的执行顺序">setTimeout 和 Promise 等的函数的执行顺序</h4>
+<h3 id="webpack-部分">webpack 部分</h3>
+<h4 id="plugin-和-loader-分别是干什么用的">plugin 和 loader 分别是干什么用的？</h4>
+<h3 id="git-部分">git 部分</h3>
+<h4 id="git-rebase-是干什么的">git rebase 是干什么的？</h4>
+<h3 id="开放性题目">开放性题目</h3>
+<h4 id="项目中遇到的难点有什么">项目中遇到的难点有什么？</h4>
+<h4 id="个人闪光点是什么">个人闪光点是什么？</h4>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[我用node写了一个爬虫]]></title>
+        <id>https://735900718.github.io/post/wo-yong-node-xie-liao-yi-ge-pa-chong/</id>
+        <link href="https://735900718.github.io/post/wo-yong-node-xie-liao-yi-ge-pa-chong/">
+        </link>
+        <updated>2020-01-02T08:05:56.000Z</updated>
+        <summary type="html"><![CDATA[<p>用node爬取页面中的新闻保存到本地</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>用node爬取页面中的新闻保存到本地</p>
+<!--more -->
+<blockquote>
+<p>背景：公司官网是我写的纯静态页面，没有后台系统，前两天突然告诉我要同步一下公司公众号的新闻。之前一篇一篇的增加，都是直接CV过来的，也不算多麻烦，这次好长时间没更新了，粗略扫了一眼，大概10+快20条了吧，身为一个开发人员，一个个CV太没效率了，于是乎...</p>
+</blockquote>
+<h3 id="准备工具">准备工具</h3>
+<ul>
+<li>
+<p><a href="http://nodejs.cn/api/fs.html">fs</a>: 保存文件</p>
+</li>
+<li>
+<p><a href="https://github.com/axios/axios">axios</a>: 负责请求公众号新闻页面信息</p>
+</li>
+<li>
+<p><a href="https://cheerio.js.org/">cheerio</a>: 专为服务器设计的核心jQuery的快速，灵活和精益实现</p>
+</li>
+</ul>
+<h3 id="分析">分析</h3>
+<ol>
+<li>
+<h4 id="本地代码分析">本地代码分析</h4>
+<p>官网用的<code>Nuxt</code>框架，新闻被我统一放到了<code>assets/news/</code>目录下，每篇新闻都是递增序列命名的js文件，如：<code>11.js</code>。包含内容如下：</p>
+<pre><code class="language-javascript">export default {
+  &quot;title&quot;: &quot;新闻标题&quot;,
+  &quot;source&quot;: &quot;新闻源&quot;,
+  &quot;time&quot;: &quot;新闻发布时间&quot;,
+  &quot;main&quot;: &quot;新闻内容&quot;
+}
+</code></pre>
+<p>图片则在另一个图片文件下以<code>news-11-*.png</code>的命名方式保存。</p>
+</li>
+<li>
+<h4 id="公众号新闻页面代码分析">公众号新闻页面代码分析</h4>
+<p>以这篇<a href="https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484688&amp;idx=1&amp;sn=98e2cc7cce402f508cd5ca0686044f54&amp;chksm=fdcb60dbcabce9cd3bcd17eebbe84de3a4fb0f93924e55b5a16b53491e6137a1143b86e20f48&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262825200&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd">新闻</a>为例，打开开发者工具，查找需要的信息</p>
+<pre><code class="language-javascript">export default {
+ 	   &quot;title&quot;: $('.rich_media_title').text(),
+  &quot;source&quot;: $('.rich_media_meta_nickname').text(),
+  &quot;time&quot;: $('.rich_media_meta_text').text(),
+  &quot;main&quot;: $('.rich_media_content').html()
+}
+</code></pre>
+</li>
+<li>
+<h4 id="获取图片">获取图片</h4>
+<pre><code class="language-javascript">axios({
+  method: 'get',
+  url: src,
+  responseType: 'stream',
+}).then(data =&gt; {
+  data.data.pipe(fs.createWriteStream(`./assets/web/news-${newsId}-${(index)}.${type}`));
+}).catch(err =&gt; {
+  console.log(src, '图片下载失败', err)
+})
+</code></pre>
+</li>
+</ol>
+<h3 id="爬取代码">爬取代码</h3>
+<p>项目目录下创建<code>getNews.js</code>文件：</p>
+<pre><code class="language-javascript">function getNews(newsUrl, newsId, newsDate) {//这里多传一个newsDate，是因为公众号新闻的日期会格式化为『上周』等中文，这里就懒得再反格式化为纯数字了
+  //请求新闻页面
+  return axios.get(url)
+    .then(response =&gt; {
+      //1.获取document
+      var html_string = response.data.toString();
+      var $ = cheerio.load(html_string, { decodeEntities: false }); // 传递页面到模块
+      //此时我们已经可以像用 JQ 一样，使用 $ 进行元素获取了
+
+      //2.处理img图片
+      $('.rich_media_content img').each((index, img) =&gt; {
+        var type = $(img).attr('data-type');
+        //将图片地址转换成本地图片
+        $(img).attr('src', &quot;${require('~/assets/web/news-&quot; + newsId + &quot;-&quot; + (index) + &quot;.&quot; + type + &quot;')}&quot;);
+
+        //将图片下载到本地
+        axios({
+          method: 'get',
+          url: src,
+          responseType: 'stream',
+        }).then(data =&gt; {
+          data.data.pipe(fs.createWriteStream(`./assets/web/news-${newsId}-${(index)}.${type}`));
+        }).catch(err =&gt; {
+          console.log(src, '图片下载失败', err)
+        })
+      })
+
+      //3.处理正文
+      let main = '';
+      $('.rich_media_content section').each((idx, item) =&gt; {
+        //将引号替换一下，修复格式错误
+        $(item).attr('style', $(item).attr('style').replace(/\&quot;/g, &quot;'&quot;))
+      });
+      main += $('.rich_media_content').html();
+
+      //4.写入文件
+      fs.writeFileSync(`./assets/news/news-${newsId}.js`, `export default {
+        &quot;title&quot;: &quot;${$('.rich_media_title').text().trim()}&quot;,
+        &quot;source&quot;: &quot;四维智联&quot;,
+        &quot;time&quot;: &quot;${newsDate}&quot;,
+        &quot;main&quot;: \`${main.trim()}\`
+      }`)
+    })
+    .catch(error =&gt; {
+      console.log(error)
+    })
+}
+</code></pre>
+<p>node 执行以上方法，喝口水的功夫，一篇新闻就复制下来了~</p>
+<p>再加强一下，把所有地址放到一个数组里，一次就全部搞定了~</p>
+<pre><code class="language-javascript">let newsList = [
+  {
+    url: 'https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484688&amp;idx=1&amp;sn=98e2cc7cce402f508cd5ca0686044f54&amp;chksm=fdcb60dbcabce9cd3bcd17eebbe84de3a4fb0f93924e55b5a16b53491e6137a1143b86e20f48&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262825200&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd',
+    id: 1,
+    date: 'XXXX-XX-XX'
+  },
+  {
+    url: 'https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484714&amp;idx=1&amp;sn=7becb9f151a0a9312d9386894eeaaabe&amp;chksm=fdcb60e1cabce9f740175a39102c8dde82b33e9a61f4eb279cdb4d3ab3f0c3cbade87de97ce8&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262765908&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd',
+    id: 2,
+    date: 'XXXX-XX-XX'
+  }
+];
+
+for (var key in newsList) {
+  let item = newsList[key];
+  getNews(item.url, item.id, item.date);
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[公众号APP内嵌H5]]></title>
+        <id>https://735900718.github.io/post/gong-zhong-hao-app-nei-qian-h5/</id>
+        <link href="https://735900718.github.io/post/gong-zhong-hao-app-nei-qian-h5/">
+        </link>
+        <updated>2019-08-27T05:53:59.000Z</updated>
+        <summary type="html"><![CDATA[<p>最近的工作老和微信有关，不是小程序就是公众号的，微信的东西是真难用:(</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>最近的工作老和微信有关，不是小程序就是公众号的，微信的东西是真难用:(</p>
+<!-- more -->
+<h3 id="单独建立一个跳转到app的页面">单独建立一个跳转到app的页面</h3>
+<ol>
+<li>页面中使用a做跳转，具体路径需要APP端提供</li>
+</ol>
+<pre><code class="language-html">&lt;a href=&quot;weixin://&quot;&gt;跳转到微信&lt;/a&gt;
+</code></pre>
+<ol start="2">
+<li>微信浏览器需要判断是否显示引导到浏览器页面打开：</li>
+</ol>
+<pre><code class="language-javascript">var u = navigator.userAgent;
+
+//android终端
+export const isAndroid = u.indexOf('Android') &gt; -1 || u.indexOf('Adr') &gt; -1; 
+
+//ios终端
+export const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); 
+
+//微信浏览器
+export const isWechat = u.toLowerCase().match(/MicroMessenger/i) == &quot;micromessenger&quot;;
+</code></pre>
+<h3 id="解决微信浏览器中遇到的问题">解决微信浏览器中遇到的问题</h3>
+<blockquote>
+<p>这里遇到个问题，微信跳转到浏览器页面后地址不是引导页面的地址（例如路径:从'/#/' 到'/#/a' 再到'/#/b'后，使用浏览器打开地址依然是'/#/'</p>
+</blockquote>
+<ol>
+<li>vue-router模式需要改为history</li>
+</ol>
+<pre><code class="language-javascript">new Router({
+    mode: 'history',
+    routes: []
+})
+</code></pre>
+<ol start="2">
+<li>引导页面需要replace刷新一下</li>
+</ol>
+<pre><code class="language-javascript">created() {
+    let _href = window.location.href;
+    if (_href.indexOf('&amp;__replace=1') &lt;= -1) {
+        window.location.replace(_href + '&amp;__replace=1')
+    }
+}
+</code></pre>
+<ol start="3">
+<li>解决刷新页面后vuex中缓存的数据会清除的问题</li>
+</ol>
+<pre><code class="language-javascript">//储存要临时缓存的数据（可以在replace前储存）
+sessionStorage.setItem(&quot;store&quot;, JSON.stringify(this.$store.state))
+//读取缓存中的数据（在app.vue中读取写入vuex）
+if (sessionStorage.getItem(&quot;store&quot;)) {
+    this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem(&quot;store&quot;))))
+}
+</code></pre>
+<h4 id="或者直接写个静态页面也行"><s>（或者直接写个静态页面也行）</s></h4>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[mpvue开发小程序]]></title>
+        <id>https://735900718.github.io/post/mpvue-kai-fa-xiao-cheng-xu/</id>
+        <link href="https://735900718.github.io/post/mpvue-kai-fa-xiao-cheng-xu/">
+        </link>
+        <updated>2018-11-23T09:31:47.000Z</updated>
+        <summary type="html"><![CDATA[<p>本次小程序使用 mpvue+iview 开发,期间遇到了不少坑,这里总结如下:</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本次小程序使用 mpvue+iview 开发,期间遇到了不少坑,这里总结如下:</p>
+<!-- more -->
+<h3 id="项目搭建">项目搭建</h3>
+<p>1.安装mpvue环境</p>
+<pre><code>vue init mpvue/mpvue-quickstart my-project
+
+cd my-project
+npm install
+npm run dev
+</code></pre>
+<p>2.安装iview组件</p>
+<p><a href="https://github.com/TalkingData/iview-weapp">github</a>下载组件,然后将<code>dist</code>目录拷贝到static文件夹下，然后需要注意的是小程序要将<strong>详情 =&gt; ES6转ES5</strong>打开</p>
+<h3 id="修改navigationbar信息">修改<code>navigationBar</code>信息</h3>
+<p>在页面同级文件夹下创建<code>main.json</code>文件，具体配置和<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/config.html">小程序api</a>一致</p>
+<h3 id="页面新建-跳转">页面新建、跳转</h3>
+<h4 id="新建页面">新建页面</h4>
+<p>除了需要在<code>src/pages</code>文件夹内按照格式创建<code>index.vue</code>和<code>main.js</code>文件外，还需要在<code>src/app.json</code>中添加页面路径信息</p>
+<h4 id="页面跳转">页面跳转</h4>
+<p>使用<code>wx.navigateTo</code>方法进行页面跳转，路径参照<code>src/pages</code>文件夹内页面存放路径</p>
+<h3 id="iview组件样式修改">iview组件样式修改</h3>
+<p>在页面内想要修改组件样式，即使加/deep/ 或者全局样式也不能修改，暂时没有好的解决办法，<strong>只能在源码内进行修改</strong>。</p>
+<h3 id="i-swipeout组件相关事项">i-swipeout组件相关事项</h3>
+<p>右侧滑动按钮数据格式必须固定为:</p>
+<pre><code>// 貌似必须是这样的,否则不会生效,我在这里设置了
+[{},{}]
+</code></pre>
+<blockquote>
+<p>自定义右侧样式</p>
+</blockquote>
+<pre><code class="language-html">&lt;i-swipeout
+  i-class=&quot;i-swipeout-demo-item&quot;
+  :operateWidth=&quot;150&quot;&gt;
+  &lt;!--operateWidth设定右侧按钮宽度--&gt;
+  &lt;!--内容插槽--&gt;
+  &lt;view slot=&quot;content&quot;&gt;
+    &lt;view class=&quot;i-swipeout-des&quot;&gt;
+      &lt;view class=&quot;i-swipeout-des-h2&quot;&gt;第七个小矮人&lt;/view&gt;
+      &lt;view class=&quot;i-swipeout-des-detail&quot;&gt;乐观善良的7个小矮人原本过着简单快乐的生活，不料诅咒公主的巫婆利用小矮人进入.&lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+  &lt;!--右侧按钮插槽--&gt;
+  &lt;view slot=&quot;button&quot; class=&quot;i-swipeout-demo-button-group&quot;&gt;
+    &lt;view class=&quot;i-swipeout-demo-button&quot;&gt;删除&lt;/view&gt;
+  &lt;/view&gt;
+&lt;/i-swipeout&gt;
+</code></pre>
+<h4 id="slot">slot</h4>
+<p>目前我是用的<code>mpvue@1.0.11</code>版本,关于 <code>slot</code>存在以下问题:</p>
+<ul>
+<li>同一个组件不支持多个插槽!!!</li>
+</ul>
+<h4 id="删除-pages-页面后的问题">删除 pages 页面后的问题</h4>
+<p>mpvue 开发模式是每次保存代码修改后自动打包到 dist 文件夹下的,但是删除页面后,dist 内还保留原页面的打包文件,会导致小程序报错</p>
+<h3 id="事件相关">事件相关</h3>
+<h4 id="小程序事件">小程序事件</h4>
+<p>原生 Evnet 内容都被整理到了 mp 对象下,例如:</p>
+<blockquote>
+<p>用户信息获取<code>e.detail.userInfo</code>变成了<code>e.mp.detail.userInfo</code></p>
+</blockquote>
+<h4 id="事件修饰符">事件修饰符</h4>
+<p>不支持<code>.self</code>修饰符</p>
+<blockquote>
+<p>如何实现&quot;self&quot;</p>
+</blockquote>
+<p>小程序是没有办法获取 dom 元素的,但是可以获取元素的 id, 例如:</p>
+<pre><code class="language-html">&lt;cover-view
+    id=&quot;modal&quot;
+    @tap=&quot;closeModal&quot;&gt;
+    &lt;cover-view&gt;点我不会关闭模态框&lt;/cover-view&gt;
+&lt;/cover-view&gt;
+&lt;script&gt;
+closeModal (e) {
+  console.log(e);
+  if (e.currentTarget.id === 'modal') {
+    this.$emit('update:visible', false);
+  }
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="cover-view-cover-image">cover-view &amp;&amp; cover-image</h3>
+<p>坑一: css 样式并不能全部支持,只支持基本的定位 scale rotate opacity 等(不支持 background-image,只能是用 cover-image)</p>
+<p>坑二: cover-image 不显示的原因:</p>
+<ul>
+<li><strong>不支持绝对路径,只能是用相对路径</strong></li>
+<li>使用不支持的 css 属性有可能导致图片不显示</li>
+</ul>
+<h3 id="引入-echarts-制作地图图表">引入 echarts 制作地图图表</h3>
+<p><code>npm i mpvue-echarts echarts</code> 安装组件</p>
+<blockquote>
+<p>相关代码如下:</p>
+</blockquote>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div class=&quot;echarts-wrap&quot;&gt;
+    &lt;mpvue-echarts
+      id=&quot;mychart-dom-area&quot;
+      canvas-id=&quot;mychart-area&quot;
+      :echarts=&quot;echarts&quot;
+      :onInit=&quot;onInit&quot;&gt;&lt;/mpvue-echarts&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+import * as echarts from 'echarts'
+// import * as echarts from '_/echarts.min.js' // 定制的 echarts 仅支持 map 功能
+import mpvueEcharts from 'mpvue-echarts'
+import geoJson from './china'   //地图数据 可以在https://github.com/apache/incubator-echarts/ 找所需的地图数据使用
+function initChart(canvas, width, height) {
+  const chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+
+  echarts.registerMap('china', geoJson);
+
+  const option = {};
+  chart.setOption(option);
+
+  return chart; // 返回 chart 后可以自动绑定触摸操作
+}
+export default {
+  components: {
+    mpvueEcharts
+  },
+  data () {
+    return {
+      echarts,
+      onInit: initChart
+    }
+  }
+}
+&lt;/script&gt;
+&lt;style&gt;
+.echarts-wrap {
+  width: 100%;
+  height: 300px;
+}
+&lt;/style&gt;
+</code></pre>
+<h3 id="生命周期">生命周期</h3>
+<p>所有页面内的 created 周期内的方法会在小程序页面打开时一次性全执行.</p>
+<h3 id="map-组件">map 组件</h3>
+<h4 id="mapcontextincludepointsobject-object">MapContext.includePoints(Object object)</h4>
+<p>padding 属性的值一定要写成<code>[number, number, number, number]</code>这样的,虽然安卓机只能识别第一个,上下左右padding值一致,但是iphone必须写满四个值才行</p>
+<h4 id="regionchange事件绑定">regionchange事件绑定</h4>
+<p>因为使用了 mpvue 编译，该事件要绑定成<code>&lt;map @regionchange=&quot;regionChange&quot; @begin=&quot;regionChangeBegin&quot; @end=&quot;regionChangeEnd&quot;&gt;&lt;map&gt;</code></p>
+<blockquote>
+<p>只绑定其中一个事件是不生效的</p>
+</blockquote>
+<h4 id="polyline">polyline</h4>
+<p>数组中的点位数量不要太多，否则会导致小程序崩溃，具体数量自己衡量，每个机型的也不一样。</p>
+<blockquote>
+<p>ios系统开启省电模式后，可以处理的点位数量将变少</p>
+</blockquote>
+<h4 id="marker">marker</h4>
+<p>如果给 marker 添加 name 属性的话，就会有一个默认的点击弹出 name 效果，类似 callout 但巨丑无比。。。 当时还很纳闷这个功能怎么来的。。。</p>
+<h3 id="获取用户信息">获取用户信息</h3>
+<p>getUserInfo获取用户信息权限,原来可以直接使用 wx.getUserInfo() 获取,现在必须使用<code>&lt;button open-type=&quot;getUserInfo&quot; lang=&quot;zh_CN&quot; @getuserinfo=&quot;onGotUserInfo&quot;&gt;确定&lt;/button&gt;</code>按钮来获取.注意!!!<strong>获取权限后,即使刷新页面还是再次登录,只要没有重新小程序再次调用 wx.getUserInfo() 的话都是会失败的?</strong>,解决方法是使用 onGoutUserInfo 作为首次获取信息的方法,后续再打开小程序时走 wx.getUserInfo 中的方法</p>
+<h3 id="mpvue-页面关闭后再次打开会保留上次关闭的数据">mpvue 页面关闭后再次打开会保留上次关闭的数据</h3>
+<p>原因是 mpvue 多页面共用了一个 vm 对象,解决方法可以参考:</p>
+<p><a href="!https://github.com/Meituan-Dianping/mpvue/issues/140">https://github.com/Meituan-Dianping/mpvue/issues/140</a></p>
+<h3 id="scroll-view">scroll-view</h3>
+<p>滚动组件中使用 absolute 会失效,解决方式需要置顶的内容放在滚动组件外面.</p>
+<h3 id="不知名-bug">不知名 bug</h3>
+<blockquote>
+<p>函数太乱(?) 会导致循环不执行,下面这个 map 就神奇的不循环了</p>
+</blockquote>
+<pre><code class="language-javascript">[a, ...b].map(item =&gt; {
+    //...
+    if () {
+        //... 
+    } else if () {
+        //...
+    } else {
+        //...
+    }
+    //...
+)
+</code></pre>
+<blockquote>
+<p>cover-img 设置 rotate 会导致图片变大...</p>
+</blockquote>
+<p><a href="!https://developers.weixin.qq.com/community/develop/doc/000aa05c39cff86510b766ed15b400?highLine=rotate">https://developers.weixin.qq.com/community/develop/doc/000aa05c39cff86510b766ed15b400?highLine=rotate</a></p>
+<p><strong>很多时候出现无厘头的 bug 需要让大脑放空一下,出去透透气,等让代码冷静下来,就好了:)</strong></p>
+<h3 id="slot-2">slot</h3>
+<p>写下这段时，我使用的是 mpvue 1.0.13 版本，在 slot 中并不能使用动态数据，如：</p>
+<pre><code class="language-html">&lt;my-comt&gt;
+  &lt;div v-if=&quot;show&quot;&gt;看不看得见&lt;/div&gt;
+  &lt;div&gt;看得见&lt;/div&gt;
+&lt;/my-comt&gt;
+</code></pre>
+<p>当动态控制 show 为 ture 值时，视图也依然不会显示。</p>
+<pre><code class="language-html">&lt;my-comt&gt;
+  &lt;input v-model=&quot;value&quot;/&gt;
+&lt;/my-comt&gt;
+</code></pre>
+<p>当动态控制 value 值为其它值时，视图不会修改。</p>
+<h3 id="地图组件中-marker-无法使用网络图片的问题"><a href="!https://www.cnblogs.com/hitore/p/8505643.html">地图组件中 marker 无法使用网络图片的问题</a></h3>
+<p>需要使用 <code>wx.downloadFile()</code> 方法先将图片下载下来再使用</p>
+<h3 id="setdata-数据更新问题">setData 数据更新问题</h3>
+<blockquote>
+<p>参考文章：<a href="https://www.cnblogs.com/imgss/p/9700617.html">在mpvue中使用map如何避坑</a></p>
+</blockquote>
+<p>mpvue 中更新数据是将 data 中的所有数据同步到小程序中，可能会导致以下 bug：</p>
+<ol>
+<li>导致某些未修改的数据更新</li>
+<li>导致小程序数据崩溃卡死</li>
+</ol>
+<p>解决办法：</p>
+<pre><code class="language-javascript">//数据写入方式改为原生方法：
+this.$mp.page.setData({
+  '$root[0].latitude': this.$data.latitude,
+  '$root[0].longitude': this.$data.longitude,
+  '$root[0].markers': this.$data.markers,
+  '$root[0].groupId': this.$data.groupId,
+  '$root[0].selected': this.$data.selected,
+  '$root[0].showMarkers': showMarkers,
+  '$root[0].polyline': polyline,
+})
+</code></pre>
+<h3 id="canvas-绘制海报">canvas 绘制海报</h3>
+<p>部分安卓手机使用<code>canvasToTempFilePath</code>生成海报图片时，会出现各种奇怪的排版错误。</p>
+<p>解决方法，添加定时器，例：</p>
+<pre><code class="language-javascript">ctx.draw(
+  false,
+  setTimeout(() =&gt; {
+    wx.canvasToTempFilePath({
+      x: 0,
+      y: 0,
+      width: W,
+      height: H,
+      destWidth: 4 * W, //为了解决清晰度问题，输出图像的尺寸为源图像的4倍
+      destHeight: 4 * H,
+      canvasId: 'shareImg',
+      success: res =&gt; {
+        /* 这里 就可以显示之前写的 预览区域了 把生成的图片url给image的src */
+        console.log('draw succ==============', res.tempFilePath);
+      },
+      fail: function (res) {
+        console.log('darw fail==============', res);
+      }
+    })
+  }, 300) //定时器延时给大一些，最少200-300才行
+)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[nuxt制作官网项目]]></title>
+        <id>https://735900718.github.io/post/nuxt-zhi-zuo-guan-wang-xiang-mu/</id>
+        <link href="https://735900718.github.io/post/nuxt-zhi-zuo-guan-wang-xiang-mu/">
+        </link>
+        <updated>2018-10-25T02:55:05.000Z</updated>
+        <summary type="html"><![CDATA[<p>官网项目一般会有SEO要求，需要vue支持服务端渲染，所以框架选择了<a href="https://zh.nuxtjs.org/guide">Nuxt</a>。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>官网项目一般会有SEO要求，需要vue支持服务端渲染，所以框架选择了<a href="https://zh.nuxtjs.org/guide">Nuxt</a>。</p>
+<!-- more -->
+<p>本次官网项目中体会到的Nuxt很方便的功能有：</p>
+<h3 id="服务端渲染">服务端渲染</h3>
+<p>框架自带的服务端渲染功能，省去了自行调配的时间，只需简单的两行命令即可完成服务的启动，命令如下：</p>
+<pre><code>npm run build
+npm run start
+</code></pre>
+<h3 id="强大的路由功能">强大的路由功能</h3>
+<p><code>pages</code>文件夹下的文件默认即路由配置（以下内容摘自官网）：</p>
+<p>假设 pages 的目录结构如下：</p>
+<pre><code>pages/
+--| user/
+-----| index.vue
+-----| one.vue
+--| index.vue
+</code></pre>
+<p>那么，Nuxt.js 自动生成的路由配置如下：</p>
+<pre><code class="language-javascript">router: {
+  routes: [
+    {
+      name: 'index',
+      path: '/',
+      component: 'pages/index.vue'
+    },
+    {
+      name: 'user',
+      path: '/user',
+      component: 'pages/user/index.vue'
+    },
+    {
+      name: 'user-one',
+      path: '/user/one',
+      component: 'pages/user/one.vue'
+    }
+  ]
+}
+</code></pre>
+<h3 id="异步数据">异步数据</h3>
+<h4 id="页面中异步的数据">页面中异步的数据</h4>
+<p>页面中从接口获取的数据，需要在服务端获取并渲染时，直接使用<code>asyncData</code>方法即可，使用方法如下(详情见<a href="https://zh.nuxtjs.org/guide/async-data#asyncdata-%E6%96%B9%E6%B3%95">asyncdata-方法</a>)：</p>
+<pre><code class="language-javascript">import axios from 'axios'
+
+export default {
+  async asyncData ({ params }) {
+    let { data } = await axios.get(`https://my-api/posts/${params.id}`)
+    return { title: data.title }
+  }
+}
+</code></pre>
+<h4 id="组件中异步的数据">组件中异步的数据</h4>
+<p><code>components</code>中的文件不支持<code>asyncData</code>方法，解决方式：</p>
+<h5 id="方案一结合nuxt为vuex扩展的serverinit来初始化数据具体使用方式如下">方案一：结合<code>nuxt</code>为<code>vuex</code>扩展的<code>serverInit</code>来初始化数据，具体使用方式如下：</h5>
+<pre><code class="language-javascript">const store = () =&gt; new Vuex.Store({
+  state: {
+    data: null
+  },
+  mutations: {
+    SET_DATA(state, data) {
+      state.data = data
+    }
+  },
+  actions: {
+    async nuxtServerInit ({ commit }, { req }) {
+      let { data } = await axios.get(`https://my-api/posts/${params.id}`)
+      commit('SET_DATA', data)
+    }
+  }
+})
+</code></pre>
+<h5 id="方案二调用fetch方法填充应用的状态树vuex具体使用方式如下">方案二：调用<code>fetch</code>方法，填充应用的状态树(vuex)，具体使用方式如下：</h5>
+<pre><code class="language-javascript">export default {
+  async fetch ({ store, params }) {
+    let { data } = await axios.get('http://my-api/stars')
+    store.commit('setStars', data)
+  }
+}
+</code></pre>
+<h3 id="html头部标签管理">HTML头部标签管理</h3>
+<p>这里nuxt集合了<code>vue-meta</code>插件，详细使用方式见<a href="https://github.com/declandewet/vue-meta">vue-meta</a></p>
+<p>例如：</p>
+<pre><code>export default {
+  head () {
+    return {
+      title: '官网'
+    }
+  }
+}
+</code></pre>
+<h3 id="layout文件">layout文件</h3>
+<p>nuxt可以制作统一布局文件，布局大体一样的页面可以制作layout文件使用。使用方式如下：</p>
+<pre><code class="language-html">// layouts/page.vue
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- morecode --&gt;
+
+    &lt;nuxt/&gt; &lt;!-- 页面视图区域 --&gt;
+
+    &lt;!-- morecode --&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+// pages/simplePage.vue
+&lt;script&gt;
+export default {
+  layout: 'page'
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="配置项修改">配置项修改</h3>
+<pre><code class="language-javascript">// plugins/swiper.js
+// 全局插件注入
+import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper/dist/ssr'
+
+Vue.use(VueAwesomeSwiper)
+
+// nuxt.config.js
+module.exports = {
+  loading: false, // 取消loading项
+  // 全局加载element-ui、swiper样式
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    'swiper/dist/css/swiper.css',
+  ],
+  // 全局加载element-ui、swiper组件
+  plugins: [
+    '@/plugins/element-ui',
+    { src: '~/plugins/swiper.js', ssr: false }
+  ],
+  build: {
+    // 打包css文件
+    extractCSS: {
+      allChunks: true
+    },
+    // 使用polyfill
+    vendor: ['babel-polyfill', 'eventsource-polyfill']
+  }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[公共组件添加使用文档]]></title>
+        <id>https://735900718.github.io/post/gong-gong-zu-jian-tian-jia-shi-yong-wen-dang/</id>
+        <link href="https://735900718.github.io/post/gong-gong-zu-jian-tian-jia-shi-yong-wen-dang/">
+        </link>
+        <updated>2018-09-27T08:40:54.000Z</updated>
+        <summary type="html"><![CDATA[<p>首先组件是发布在gitlab上的，和github一样，项目都可以上传Readme.md文件用来添加项目说明。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>首先组件是发布在gitlab上的，和github一样，项目都可以上传Readme.md文件用来添加项目说明。</p>
+<!-- more -->
+<p>所以本次任务主要是对markdown文件(以下统称md)的运用，因为一直在使用hexo写文章，所以对md的基本运用还是比较熟练的。</p>
+<blockquote>
+<p>为什么要使用md：可以使用易读易写的纯文本格式编写文档，然后转换成有效的 HTML 文档。</p>
+</blockquote>
+<p>既然是转化成html，对于前端开发来说，对比着标签学习是再合适不过的了。</p>
+<p>这里总结一下md的基本格式对应的html标签：</p>
+<table>
+<thead>
+<tr>
+<th>md</th>
+<th>html</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#</code></td>
+<td><code>h1</code>(每个#都是一个锚点)</td>
+</tr>
+<tr>
+<td><code>##</code></td>
+<td><code>h2</code></td>
+</tr>
+<tr>
+<td><code>###</code></td>
+<td><code>h3</code></td>
+</tr>
+<tr>
+<td><code>####</code></td>
+<td><code>h4</code></td>
+</tr>
+<tr>
+<td><code>#####</code></td>
+<td><code>h5</code></td>
+</tr>
+<tr>
+<td><code>######</code></td>
+<td><code>h6</code></td>
+</tr>
+<tr>
+<td><code>*word*</code></td>
+<td><code>&lt;i&gt;word&lt;/i&gt;</code></td>
+</tr>
+<tr>
+<td><code>**word**</code></td>
+<td><code>&lt;b&gt;word&lt;/b&gt;</code></td>
+</tr>
+<tr>
+<td><code>~~word~~</code></td>
+<td><code>&lt;s&gt;word&lt;/s&gt;</code></td>
+</tr>
+<tr>
+<td><code>++word++</code></td>
+<td><code>&lt;u&gt;word&lt;/u&gt;</code></td>
+</tr>
+<tr>
+<td><code>---</code></td>
+<td><code>hr</code></td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td><code>blockquote</code></td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td><code>ul</code></td>
+</tr>
+<tr>
+<td><code>1.</code></td>
+<td><code>ol</code></td>
+</tr>
+<tr>
+<td><code>![图片名称](图片地址)</code></td>
+<td><code>img</code></td>
+</tr>
+<tr>
+<td><code>[链接名称](连接地址)</code></td>
+<td><code>a</code></td>
+</tr>
+</tbody>
+</table>
+<p>表格：</p>
+<pre><code>header 1 | header 2
+---|---
+row 1 col 1 | row 1 col 2
+row 2 col 1 | row 2 col 2
+
+
+&quot;--- | ---&quot;  表示默认对齐方式
+冒号的位置代表对齐的方向
+&quot;---: | ---&quot;  第一列靠右对齐，第二列默认对齐
+</code></pre>
+<p>最后推荐一个vscode上的目录生成插件<code>Markdown TOC</code></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue模板依赖升级至最新]]></title>
+        <id>https://735900718.github.io/post/vue-mo-ban-yi-lai-sheng-ji-zhi-zui-xin/</id>
+        <link href="https://735900718.github.io/post/vue-mo-ban-yi-lai-sheng-ji-zhi-zui-xin/">
+        </link>
+        <updated>2018-09-27T08:14:26.000Z</updated>
+        <summary type="html"><![CDATA[<p>首先推荐一个依赖更新工具包<a href="https://www.npmjs.com/package/npm-check-updates">npm-check-updates</a>，可以快速将package中的依赖升级至最新。</p>
+<p>升级后主要的问题是webpack 3.x 升级至 webpack 4.x 遇到的各种问题。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>首先推荐一个依赖更新工具包<a href="https://www.npmjs.com/package/npm-check-updates">npm-check-updates</a>，可以快速将package中的依赖升级至最新。</p>
+<p>升级后主要的问题是webpack 3.x 升级至 webpack 4.x 遇到的各种问题。</p>
+<!-- more -->
+<p>参考了<a href="http://coderlt.coding.me/2018/04/12/webpack4/">Webpack4 新特性 及 Vue-cli项目升级</a>中的配置，主要修改如下：</p>
+<h3 id="添加依赖文件">添加依赖文件</h3>
+<p><code>npm i webpack-cli mini-css-extract-plugin -D</code></p>
+<blockquote>
+<p>需要注意的是<code>&quot;babel-core&quot;: &quot;^6.26.3&quot;,&quot;babel-loader&quot;: &quot;^7.1.5&quot;,</code>这两个版本要正确，babel-loader@8会报错</p>
+</blockquote>
+<h3 id="基础配置">基础配置</h3>
+<p>webpack.base.conf.js</p>
+<pre><code class="language-javascript">const { VueLoaderPlugin } = require('vue-loader')
+
+module.exports = {
+    plugins: [
+        new VueLoaderPlugin()
+    ]
+}
+</code></pre>
+<h3 id="开发环境">开发环境</h3>
+<pre><code class="language-javascript">const devWebpackConfig = merge(baseWebpackConfig, {
+    mode: 'development',
+    // ...
+    plugins: [
+        //这两个功能已经内置，可以注销掉
+        // new webpack.NamedModulesPlugin(), 
+        // new webpack.NoEmitOnErrorsPlugin(),
+    ]
+})
+
+</code></pre>
+<h3 id="生产环境">生产环境</h3>
+<p>utils.js</p>
+<pre><code class="language-javascript">// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin= require('mini-css-extract-plugin')
+
+function generateLoaders (loader, loaderOptions) {
+    const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
+
+    if (loader) {
+      loaders.push({
+        loader: loader + '-loader',
+        options: Object.assign({}, loaderOptions, {
+          sourceMap: options.sourceMap
+        })
+      })
+    }
+
+    return [
+      options.extract ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+    ].concat(loaders)
+  }
+</code></pre>
+<p>webpack.prod.conf.js</p>
+<pre><code class="language-javascript">// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const webpackConfig = merge(baseWebpackConfig, {
+    mode: 'production',
+    // 添加新配置项
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'initial',
+                    name: 'vendors',
+                },
+                'async-vendors': {
+                    test: /[\\/]node_modules[\\/]/,
+                    minChunks: 2,
+                    chunks: 'async',
+                    name: 'async-vendors'
+                }
+            }
+        },
+        runtimeChunk: {
+            name: 'runtime'
+        }
+    },
+    plugins: [
+        // 去除已经废弃的功能
+        //new UglifyJsPlugin({})
+        //new webpack.optimize.CommonsChunkPlugin()
+        //new ExtractTextPlugin({//已经不能用了
+        new MiniCssExtractPlugin({//改用这个
+            filename: utils.assetsPath('css/[name].[contenthash].css'),
+            allChunks: true,
+        }),
+    ]
+})
+</code></pre>
+<p>然后就可以正常项目开发、生产了。</p>
+<p>最后，最终项目依赖配置如下：</p>
+<pre><code class="language-json">{
+  &quot;devDependencies&quot;: {
+    &quot;autoprefixer&quot;: &quot;^9.1.5&quot;,
+    &quot;babel-core&quot;: &quot;^6.26.3&quot;,
+    &quot;babel-helper-vue-jsx-merge-props&quot;: &quot;^2.0.3&quot;,
+    &quot;babel-loader&quot;: &quot;^7.1.5&quot;,
+    &quot;babel-plugin-syntax-jsx&quot;: &quot;^6.18.0&quot;,
+    &quot;babel-plugin-transform-runtime&quot;: &quot;^6.22.0&quot;,
+    &quot;babel-plugin-transform-vue-jsx&quot;: &quot;^3.5.0&quot;,
+    &quot;babel-preset-env&quot;: &quot;^1.3.2&quot;,
+    &quot;babel-preset-stage-2&quot;: &quot;^6.22.0&quot;,
+    &quot;chalk&quot;: &quot;^2.0.1&quot;,
+    &quot;copy-webpack-plugin&quot;: &quot;^4.0.1&quot;,
+    &quot;css-loader&quot;: &quot;^1.0.0&quot;,
+    &quot;file-loader&quot;: &quot;^2.0.0&quot;,
+    &quot;friendly-errors-webpack-plugin&quot;: &quot;^1.6.1&quot;,
+    &quot;html-webpack-plugin&quot;: &quot;^3.2.0&quot;,
+    &quot;mini-css-extract-plugin&quot;: &quot;^0.4.3&quot;,
+    &quot;node-notifier&quot;: &quot;^5.1.2&quot;,
+    &quot;optimize-css-assets-webpack-plugin&quot;: &quot;^5.0.1&quot;,
+    &quot;ora&quot;: &quot;^3.0.0&quot;,
+    &quot;portfinder&quot;: &quot;^1.0.13&quot;,
+    &quot;postcss-import&quot;: &quot;^12.0.0&quot;,
+    &quot;postcss-loader&quot;: &quot;^3.0.0&quot;,
+    &quot;postcss-url&quot;: &quot;^8.0.0&quot;,
+    &quot;rimraf&quot;: &quot;^2.6.0&quot;,
+    &quot;semver&quot;: &quot;^5.3.0&quot;,
+    &quot;shelljs&quot;: &quot;^0.8.2&quot;,
+    &quot;uglifyjs-webpack-plugin&quot;: &quot;^2.0.1&quot;,
+    &quot;url-loader&quot;: &quot;^1.1.1&quot;,
+    &quot;vue-loader&quot;: &quot;^15.4.2&quot;,
+    &quot;vue-style-loader&quot;: &quot;^4.1.2&quot;,
+    &quot;vue-template-compiler&quot;: &quot;^2.5.2&quot;,
+    &quot;webpack&quot;: &quot;^4.20.2&quot;,
+    &quot;webpack-bundle-analyzer&quot;: &quot;^3.0.2&quot;,
+    &quot;webpack-cli&quot;: &quot;^3.1.1&quot;,
+    &quot;webpack-dev-server&quot;: &quot;^3.1.9&quot;,
+    &quot;webpack-merge&quot;: &quot;^4.1.0&quot;
+  }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue速查表]]></title>
+        <id>https://735900718.github.io/post/vue-su-cha-biao/</id>
+        <link href="https://735900718.github.io/post/vue-su-cha-biao/">
+        </link>
+        <updated>2018-09-20T07:18:11.000Z</updated>
+        <summary type="html"><![CDATA[<p>宣传一下近期做的<a href="https://735900718.github.io/vue-cheat-sheet/">vue速查表</a>,样式是从<a href="https://vuejs-tips.github.io/cheatsheet/">cheatsheet</a>这里照搬来到...</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>宣传一下近期做的<a href="https://735900718.github.io/vue-cheat-sheet/">vue速查表</a>,样式是从<a href="https://vuejs-tips.github.io/cheatsheet/">cheatsheet</a>这里照搬来到...</p>
+<!-- more -->
+<p>之所以从新做一份的原因是：</p>
+<ul>
+<li>原作者已经1年没有更新了，新特性都查不到。</li>
+<li>作者嵌入的网站是国外的地址，有时候会不太方便。</li>
+</ul>
+<p>所以就自己撸了一个新的，至少我在关注vue的期间会不断更新的。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[制作团队自己的webpack模板]]></title>
+        <id>https://735900718.github.io/post/zhi-zuo-tuan-dui-zi-ji-de-webpack-mo-ban/</id>
+        <link href="https://735900718.github.io/post/zhi-zuo-tuan-dui-zi-ji-de-webpack-mo-ban/">
+        </link>
+        <updated>2018-09-11T06:09:30.000Z</updated>
+        <summary type="html"><![CDATA[<p>背景：继公共代码抽出后，团队还需要一个快速建站的模板，要对webpack进行一些修改、发布、使用。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>背景：继公共代码抽出后，团队还需要一个快速建站的模板，要对webpack进行一些修改、发布、使用。</p>
+<!-- more -->
+<h4 id="模板制作">模板制作</h4>
+<p>1.下载<br>
+先在<a href="https://github.com/vuejs-templates/webpack">vuejs-templates/webpack</a>下载webpack模板<br>
+<code>git clone https://github.com/vuejs-templates/webpack</code></p>
+<p>2.修改<br>
+主要关心以下部分：</p>
+<ul>
+<li><code>./meta.js</code>负责修改vue init时的提醒内容</li>
+<li><code>./template</code>模板内容</li>
+</ul>
+<h4 id="解决模板下载问题">解决模板下载问题</h4>
+<p>1.模板上传至github<br>
+直接<code>vue init &lt;mygithub&gt;/&lt;repo&gt; my-project</code>,即可安装自定义的模板使用。</p>
+<p>2.模板上传至gitlab<br>
+使用<code>vue init gitlab:https://gitlab.com:&lt;name&gt;/&lt;repo&gt; my-project --clone</code>命令安装模板。</p>
+<p>3.使用本地模板安装:<br>
+先 <code>git clone</code> 模板到本地,然后使用 <code>vue init &lt;模板本地目录&gt; &lt;project-name&gt;</code> 可以使用。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[抽出公共代码制作组件上传至gitlab]]></title>
+        <id>https://735900718.github.io/post/chou-chu-gong-gong-dai-ma-zhi-zuo-zu-jian-shang-chuan-zhi-gitlab/</id>
+        <link href="https://735900718.github.io/post/chou-chu-gong-gong-dai-ma-zhi-zuo-zu-jian-shang-chuan-zhi-gitlab/">
+        </link>
+        <updated>2018-09-10T01:26:02.000Z</updated>
+        <summary type="html"><![CDATA[<p>背景：项目中有一套常用的组件库，每个项目都是复制粘贴过去的，一旦组件库有改动，项目将不好控制。将组件库打包上传后，项目可按照按照组件库版本按需更新。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>背景：项目中有一套常用的组件库，每个项目都是复制粘贴过去的，一旦组件库有改动，项目将不好控制。将组件库打包上传后，项目可按照按照组件库版本按需更新。</p>
+<!-- more -->
+<ol>
+<li>
+<p>gitlab新建项目上传代码后，<br>
+<code>npm install git+&lt;项目地址&gt;</code>,可以安装指定位置的组件。</p>
+</li>
+<li>
+<p>尝试使用webpack-simple模板打包组件，umd、commonjs2规则打包完毕后，项目引入组件报错某方法未找到失败了X(</p>
+</li>
+<li>
+<p>不打包，直接在package.json中</p>
+</li>
+</ol>
+<pre><code class="language-json">&quot;peerDependencies&quot;: {
+    &quot;axios&quot;: &quot;^0.18.0&quot;,
+    &quot;echarts&quot;: &quot;^4.1.0&quot;,
+    &quot;element-ui&quot;: &quot;^2.4.6&quot;,
+    &quot;md5-base64&quot;: &quot;0.0.3&quot;,
+    &quot;moment&quot;: &quot;^2.22.2&quot;,
+    &quot;vue&quot;: &quot;^2.5.11&quot;,
+    &quot;vue-echarts&quot;: &quot;^3.1.2&quot;,
+    &quot;vue-events&quot;: &quot;^3.1.0&quot;,
+    &quot;vue-router&quot;: &quot;^3.0.1&quot;,
+    &quot;vuex&quot;: &quot;^3.0.1&quot;
+  },
+</code></pre>
+<p>声明依赖文件，项目中使用，报错jsx语法不能使用。(感觉这种方式不对，应该是先打包再发布才对的)</p>
+<ol start="4">
+<li>返回第2步，查找打包失败的原因：最终确定为使用了es6语法，修改webpack.config.js配置</li>
+</ol>
+<pre><code class="language-js">// 添加工具uglifyjs
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+module.exports = {
+    // 这里把依赖文件写上，确保不会重复打包
+    externals: {    
+        vue: {
+            root: 'Vue',
+            commonjs: 'vue',
+            commonjs2: 'vue',
+            amd: 'vue'
+        },
+        axios:&quot;axios&quot;,
+        &quot;element-ui&quot;: &quot;element-ui&quot;,
+        &quot;md5-base64&quot;: &quot;md5-base64&quot;,
+        &quot;moment&quot;: &quot;moment&quot;,
+        &quot;vue-events&quot;: &quot;vue-events&quot;,
+        &quot;vue-router&quot;: &quot;vue-router&quot;,
+        &quot;vuex&quot;: &quot;vuex&quot;
+      },
+    }
+if (process.env.NODE_ENV === 'production') {
+  // more code
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    // more code
+    // 这里把webpack的uglifyjs换成这个，就能正确打包了
+    new UglifyJSPlugin({
+      sourceMap: true
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}
+</code></pre>
+<ol start="5">
+<li>版本控制问题：因为不是npm上提交的没办法直接public-core@1.1.0这样安装，需要改为使用分支或标签控制版本，<code>https://***.com/name/project.git#&lt;branch or tags&gt;</code>命令安装组件</li>
+</ol>
+]]></content>
+    </entry>
+</feed>

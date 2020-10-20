@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>webpack配置与遇到的问题 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="webpack配置与遇到的问题 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+最近玩了一下webpack，使用了一些基本的打包工具以及热更新插件。
+
+webpack配置出错:
+Error: Cannot find module 'webpack/lib/node/NodeTemplatePlugin'
+解决方法：
+..." />
+    <meta name="keywords" content="webpack" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              webpack配置与遇到的问题
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-11-25
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/0ZsjOnF19/" class="post-tag">
+                  # webpack
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=4125814&auto=0&height=66"></iframe>
+<p>最近玩了一下webpack，使用了一些基本的打包工具以及热更新插件。</p>
+<!-- more -->
+<p>webpack配置出错:</p>
+<p><code>Error: Cannot find module 'webpack/lib/node/NodeTemplatePlugin'</code></p>
+<p>解决方法：</p>
+<p>1、删除全局webpack并在本地安装</p>
+<pre><code>npm uninstall -g webpack 
+npm install --save-dev html-webpack-plugin webpack webpack-dev-server
+</code></pre>
+<p>2、将全局webpack链接到项目的节点模块。这个缺点是项目将被迫使用最新的webpack（这只会在某些更新不兼容时才会产生问题）</p>
+<pre><code>npm i webpack -g
+npm link webpack --save-dev
+</code></pre>
+<h3 id="webpackconfigjs-生产模式">webpack.config.js 生产模式</h3>
+<pre><code class="language-javascript">const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');     //  自动生成html文件
+const CleanWebpackPlugin = require('clean-webpack-plugin');   //  清除项目多余文件
+const Uglifyjs = require('uglifyjs-webpack-plugin');          //  打包时除去多余的js文件
+const webpack = require('webpack');
+const Extract = require('extract-text-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; //  一款分析 bundle 内容的插件及 CLI 工具，以便捷的、交互式、可缩放的树状图形式展现给用户。
+const autoprefixer = require('autoprefixer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');   //  复制目录文件并打包
+
+module.exports = {
+  entry: {
+    main: './src/index.js'  //  不被打包影响的文件
+  },
+
+  output: {
+    filename: '[name].[chunkhash].js',    //  根据chunkPlugin 生成文件名
+    path: path.resolve(__dirname, 'dist')
+  },
+
+  devtool: 'soure-map',
+
+  devServer: {
+    contentBase: './dist'
+  },
+
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+    // new Uglifyjs({   //  js代码压缩
+    //   sourceMap: true
+    // }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new HtmlWebpackPlugin({
+      title: 'awesome webpack',
+      template: './index.html'
+    }),
+    new webpack.HashedModuleIdsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'runtime'
+    }),
+    new Extract('[name].min.css'),
+    new CopyWebpackPlugin([{
+      from: __dirname + '/src/public'
+    }]),
+    new BundleAnalyzerPlugin()
+  ],
+
+  module: { // 打包文件处理
+    rules: [
+      {
+        test: /\.css$/,
+        use: Extract.extract({
+          use: [  // css autoprefixer
+            {
+              loader: 'css-loader?minimize'
+            }, 
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins() {
+                  return [
+                    require('precss'),
+                    require('autoprefixer')({
+                      browsers: [
+                        '&gt;1%',
+                        'last 2 versions',
+                        'Firefox ESR',
+                        'ie &gt;= 8'
+                      ]
+                    })
+                  ]
+                }
+              }
+            }
+          ]
+        })
+
+      },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(csv|tsv)$/,
+        use: ['csv-loader']
+      },
+      {
+        test: /\.(xml)$/,
+        use: ['xml-loader']
+      },
+      { // 转译es6语法
+        test: /\.js$/,
+        loader: 'babel-loader'
+      }
+    ],
+  }
+}
+</code></pre>
+<h3 id="webpackdevjs-开发模式">webpack.dev.js 开发模式</h3>
+<pre><code class="language-javascript">const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+module.exports = {
+  entry: {
+    app: './src/index'
+  },
+  
+  devtool: 'inline-soure-map',
+  
+  devServer: {
+    contentBase: './dist'
+  },
+
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+    new HtmlWebpackPlugin({
+      title: 'Production',
+      template: './index.html'
+    }),
+    new CopyWebpackPlugin([{
+      from: __dirname + '/src/public'
+    }])
+  ],
+
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(csv|tsv)$/,
+        use: ['csv-loader']
+      },
+      {
+        test: /\.(xml)$/,
+        use: ['xml-loader']
+      }
+    ]
+  }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#webpackconfigjs-%E7%94%9F%E4%BA%A7%E6%A8%A1%E5%BC%8F">webpack.config.js 生产模式</a></li>
+<li><a href="#webpackdevjs-%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F">webpack.dev.js 开发模式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/ji-yi-ci-xiang-mu-xiang-xia-jian-rong-ie8/">
+              <h3 class="post-title">
+                记一次项目向下兼容ie8
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,321 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vue模板依赖升级至最新 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vue模板依赖升级至最新 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="首先推荐一个依赖更新工具包npm-check-updates，可以快速将package中的依赖升级至最新。
+升级后主要的问题是webpack 3.x 升级至 webpack 4.x 遇到的各种问题。
+
+参考了Webpack4 新特性 及 V..." />
+    <meta name="keywords" content="vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vue模板依赖升级至最新
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-09-27
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>首先推荐一个依赖更新工具包<a href="https://www.npmjs.com/package/npm-check-updates">npm-check-updates</a>，可以快速将package中的依赖升级至最新。</p>
+<p>升级后主要的问题是webpack 3.x 升级至 webpack 4.x 遇到的各种问题。</p>
+<!-- more -->
+<p>参考了<a href="http://coderlt.coding.me/2018/04/12/webpack4/">Webpack4 新特性 及 Vue-cli项目升级</a>中的配置，主要修改如下：</p>
+<h3 id="添加依赖文件">添加依赖文件</h3>
+<p><code>npm i webpack-cli mini-css-extract-plugin -D</code></p>
+<blockquote>
+<p>需要注意的是<code>&quot;babel-core&quot;: &quot;^6.26.3&quot;,&quot;babel-loader&quot;: &quot;^7.1.5&quot;,</code>这两个版本要正确，babel-loader@8会报错</p>
+</blockquote>
+<h3 id="基础配置">基础配置</h3>
+<p>webpack.base.conf.js</p>
+<pre><code class="language-javascript">const { VueLoaderPlugin } = require('vue-loader')
+
+module.exports = {
+    plugins: [
+        new VueLoaderPlugin()
+    ]
+}
+</code></pre>
+<h3 id="开发环境">开发环境</h3>
+<pre><code class="language-javascript">const devWebpackConfig = merge(baseWebpackConfig, {
+    mode: 'development',
+    // ...
+    plugins: [
+        //这两个功能已经内置，可以注销掉
+        // new webpack.NamedModulesPlugin(), 
+        // new webpack.NoEmitOnErrorsPlugin(),
+    ]
+})
+
+</code></pre>
+<h3 id="生产环境">生产环境</h3>
+<p>utils.js</p>
+<pre><code class="language-javascript">// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin= require('mini-css-extract-plugin')
+
+function generateLoaders (loader, loaderOptions) {
+    const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
+
+    if (loader) {
+      loaders.push({
+        loader: loader + '-loader',
+        options: Object.assign({}, loaderOptions, {
+          sourceMap: options.sourceMap
+        })
+      })
+    }
+
+    return [
+      options.extract ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+    ].concat(loaders)
+  }
+</code></pre>
+<p>webpack.prod.conf.js</p>
+<pre><code class="language-javascript">// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const webpackConfig = merge(baseWebpackConfig, {
+    mode: 'production',
+    // 添加新配置项
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'initial',
+                    name: 'vendors',
+                },
+                'async-vendors': {
+                    test: /[\\/]node_modules[\\/]/,
+                    minChunks: 2,
+                    chunks: 'async',
+                    name: 'async-vendors'
+                }
+            }
+        },
+        runtimeChunk: {
+            name: 'runtime'
+        }
+    },
+    plugins: [
+        // 去除已经废弃的功能
+        //new UglifyJsPlugin({})
+        //new webpack.optimize.CommonsChunkPlugin()
+        //new ExtractTextPlugin({//已经不能用了
+        new MiniCssExtractPlugin({//改用这个
+            filename: utils.assetsPath('css/[name].[contenthash].css'),
+            allChunks: true,
+        }),
+    ]
+})
+</code></pre>
+<p>然后就可以正常项目开发、生产了。</p>
+<p>最后，最终项目依赖配置如下：</p>
+<pre><code class="language-json">{
+  &quot;devDependencies&quot;: {
+    &quot;autoprefixer&quot;: &quot;^9.1.5&quot;,
+    &quot;babel-core&quot;: &quot;^6.26.3&quot;,
+    &quot;babel-helper-vue-jsx-merge-props&quot;: &quot;^2.0.3&quot;,
+    &quot;babel-loader&quot;: &quot;^7.1.5&quot;,
+    &quot;babel-plugin-syntax-jsx&quot;: &quot;^6.18.0&quot;,
+    &quot;babel-plugin-transform-runtime&quot;: &quot;^6.22.0&quot;,
+    &quot;babel-plugin-transform-vue-jsx&quot;: &quot;^3.5.0&quot;,
+    &quot;babel-preset-env&quot;: &quot;^1.3.2&quot;,
+    &quot;babel-preset-stage-2&quot;: &quot;^6.22.0&quot;,
+    &quot;chalk&quot;: &quot;^2.0.1&quot;,
+    &quot;copy-webpack-plugin&quot;: &quot;^4.0.1&quot;,
+    &quot;css-loader&quot;: &quot;^1.0.0&quot;,
+    &quot;file-loader&quot;: &quot;^2.0.0&quot;,
+    &quot;friendly-errors-webpack-plugin&quot;: &quot;^1.6.1&quot;,
+    &quot;html-webpack-plugin&quot;: &quot;^3.2.0&quot;,
+    &quot;mini-css-extract-plugin&quot;: &quot;^0.4.3&quot;,
+    &quot;node-notifier&quot;: &quot;^5.1.2&quot;,
+    &quot;optimize-css-assets-webpack-plugin&quot;: &quot;^5.0.1&quot;,
+    &quot;ora&quot;: &quot;^3.0.0&quot;,
+    &quot;portfinder&quot;: &quot;^1.0.13&quot;,
+    &quot;postcss-import&quot;: &quot;^12.0.0&quot;,
+    &quot;postcss-loader&quot;: &quot;^3.0.0&quot;,
+    &quot;postcss-url&quot;: &quot;^8.0.0&quot;,
+    &quot;rimraf&quot;: &quot;^2.6.0&quot;,
+    &quot;semver&quot;: &quot;^5.3.0&quot;,
+    &quot;shelljs&quot;: &quot;^0.8.2&quot;,
+    &quot;uglifyjs-webpack-plugin&quot;: &quot;^2.0.1&quot;,
+    &quot;url-loader&quot;: &quot;^1.1.1&quot;,
+    &quot;vue-loader&quot;: &quot;^15.4.2&quot;,
+    &quot;vue-style-loader&quot;: &quot;^4.1.2&quot;,
+    &quot;vue-template-compiler&quot;: &quot;^2.5.2&quot;,
+    &quot;webpack&quot;: &quot;^4.20.2&quot;,
+    &quot;webpack-bundle-analyzer&quot;: &quot;^3.0.2&quot;,
+    &quot;webpack-cli&quot;: &quot;^3.1.1&quot;,
+    &quot;webpack-dev-server&quot;: &quot;^3.1.9&quot;,
+    &quot;webpack-merge&quot;: &quot;^4.1.0&quot;
+  }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96%E6%96%87%E4%BB%B6">添加依赖文件</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE">基础配置</a></li>
+<li><a href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">开发环境</a></li>
+<li><a href="#%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83">生产环境</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/vue-su-cha-biao/">
+              <h3 class="post-title">
+                vue速查表
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

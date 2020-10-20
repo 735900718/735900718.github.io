@@ -1,0 +1,343 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>nuxt制作官网项目 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="nuxt制作官网项目 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="官网项目一般会有SEO要求，需要vue支持服务端渲染，所以框架选择了Nuxt。
+
+本次官网项目中体会到的Nuxt很方便的功能有：
+服务端渲染
+框架自带的服务端渲染功能，省去了自行调配的时间，只需简单的两行命令即可完成服务的启动，命令如下：
+..." />
+    <meta name="keywords" content="nuxt,vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              nuxt制作官网项目
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-10-25
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/idQRaiLda/" class="post-tag">
+                  # nuxt
+                </a>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>官网项目一般会有SEO要求，需要vue支持服务端渲染，所以框架选择了<a href="https://zh.nuxtjs.org/guide">Nuxt</a>。</p>
+<!-- more -->
+<p>本次官网项目中体会到的Nuxt很方便的功能有：</p>
+<h3 id="服务端渲染">服务端渲染</h3>
+<p>框架自带的服务端渲染功能，省去了自行调配的时间，只需简单的两行命令即可完成服务的启动，命令如下：</p>
+<pre><code>npm run build
+npm run start
+</code></pre>
+<h3 id="强大的路由功能">强大的路由功能</h3>
+<p><code>pages</code>文件夹下的文件默认即路由配置（以下内容摘自官网）：</p>
+<p>假设 pages 的目录结构如下：</p>
+<pre><code>pages/
+--| user/
+-----| index.vue
+-----| one.vue
+--| index.vue
+</code></pre>
+<p>那么，Nuxt.js 自动生成的路由配置如下：</p>
+<pre><code class="language-javascript">router: {
+  routes: [
+    {
+      name: 'index',
+      path: '/',
+      component: 'pages/index.vue'
+    },
+    {
+      name: 'user',
+      path: '/user',
+      component: 'pages/user/index.vue'
+    },
+    {
+      name: 'user-one',
+      path: '/user/one',
+      component: 'pages/user/one.vue'
+    }
+  ]
+}
+</code></pre>
+<h3 id="异步数据">异步数据</h3>
+<h4 id="页面中异步的数据">页面中异步的数据</h4>
+<p>页面中从接口获取的数据，需要在服务端获取并渲染时，直接使用<code>asyncData</code>方法即可，使用方法如下(详情见<a href="https://zh.nuxtjs.org/guide/async-data#asyncdata-%E6%96%B9%E6%B3%95">asyncdata-方法</a>)：</p>
+<pre><code class="language-javascript">import axios from 'axios'
+
+export default {
+  async asyncData ({ params }) {
+    let { data } = await axios.get(`https://my-api/posts/${params.id}`)
+    return { title: data.title }
+  }
+}
+</code></pre>
+<h4 id="组件中异步的数据">组件中异步的数据</h4>
+<p><code>components</code>中的文件不支持<code>asyncData</code>方法，解决方式：</p>
+<h5 id="方案一结合nuxt为vuex扩展的serverinit来初始化数据具体使用方式如下">方案一：结合<code>nuxt</code>为<code>vuex</code>扩展的<code>serverInit</code>来初始化数据，具体使用方式如下：</h5>
+<pre><code class="language-javascript">const store = () =&gt; new Vuex.Store({
+  state: {
+    data: null
+  },
+  mutations: {
+    SET_DATA(state, data) {
+      state.data = data
+    }
+  },
+  actions: {
+    async nuxtServerInit ({ commit }, { req }) {
+      let { data } = await axios.get(`https://my-api/posts/${params.id}`)
+      commit('SET_DATA', data)
+    }
+  }
+})
+</code></pre>
+<h5 id="方案二调用fetch方法填充应用的状态树vuex具体使用方式如下">方案二：调用<code>fetch</code>方法，填充应用的状态树(vuex)，具体使用方式如下：</h5>
+<pre><code class="language-javascript">export default {
+  async fetch ({ store, params }) {
+    let { data } = await axios.get('http://my-api/stars')
+    store.commit('setStars', data)
+  }
+}
+</code></pre>
+<h3 id="html头部标签管理">HTML头部标签管理</h3>
+<p>这里nuxt集合了<code>vue-meta</code>插件，详细使用方式见<a href="https://github.com/declandewet/vue-meta">vue-meta</a></p>
+<p>例如：</p>
+<pre><code>export default {
+  head () {
+    return {
+      title: '官网'
+    }
+  }
+}
+</code></pre>
+<h3 id="layout文件">layout文件</h3>
+<p>nuxt可以制作统一布局文件，布局大体一样的页面可以制作layout文件使用。使用方式如下：</p>
+<pre><code class="language-html">// layouts/page.vue
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- morecode --&gt;
+
+    &lt;nuxt/&gt; &lt;!-- 页面视图区域 --&gt;
+
+    &lt;!-- morecode --&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+// pages/simplePage.vue
+&lt;script&gt;
+export default {
+  layout: 'page'
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="配置项修改">配置项修改</h3>
+<pre><code class="language-javascript">// plugins/swiper.js
+// 全局插件注入
+import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper/dist/ssr'
+
+Vue.use(VueAwesomeSwiper)
+
+// nuxt.config.js
+module.exports = {
+  loading: false, // 取消loading项
+  // 全局加载element-ui、swiper样式
+  css: [
+    'element-ui/lib/theme-chalk/index.css',
+    'swiper/dist/css/swiper.css',
+  ],
+  // 全局加载element-ui、swiper组件
+  plugins: [
+    '@/plugins/element-ui',
+    { src: '~/plugins/swiper.js', ssr: false }
+  ],
+  build: {
+    // 打包css文件
+    extractCSS: {
+      allChunks: true
+    },
+    // 使用polyfill
+    vendor: ['babel-polyfill', 'eventsource-polyfill']
+  }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93">服务端渲染</a></li>
+<li><a href="#%E5%BC%BA%E5%A4%A7%E7%9A%84%E8%B7%AF%E7%94%B1%E5%8A%9F%E8%83%BD">强大的路由功能</a></li>
+<li><a href="#%E5%BC%82%E6%AD%A5%E6%95%B0%E6%8D%AE">异步数据</a>
+<ul>
+<li><a href="#%E9%A1%B5%E9%9D%A2%E4%B8%AD%E5%BC%82%E6%AD%A5%E7%9A%84%E6%95%B0%E6%8D%AE">页面中异步的数据</a></li>
+<li><a href="#%E7%BB%84%E4%BB%B6%E4%B8%AD%E5%BC%82%E6%AD%A5%E7%9A%84%E6%95%B0%E6%8D%AE">组件中异步的数据</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%A1%88%E4%B8%80%E7%BB%93%E5%90%88nuxt%E4%B8%BAvuex%E6%89%A9%E5%B1%95%E7%9A%84serverinit%E6%9D%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%A6%82%E4%B8%8B">方案一：结合<code>nuxt</code>为<code>vuex</code>扩展的<code>serverInit</code>来初始化数据，具体使用方式如下：</a></li>
+<li><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C%E8%B0%83%E7%94%A8fetch%E6%96%B9%E6%B3%95%E5%A1%AB%E5%85%85%E5%BA%94%E7%94%A8%E7%9A%84%E7%8A%B6%E6%80%81%E6%A0%91vuex%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%A6%82%E4%B8%8B">方案二：调用<code>fetch</code>方法，填充应用的状态树(vuex)，具体使用方式如下：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#html%E5%A4%B4%E9%83%A8%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86">HTML头部标签管理</a></li>
+<li><a href="#layout%E6%96%87%E4%BB%B6">layout文件</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%A1%B9%E4%BF%AE%E6%94%B9">配置项修改</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/gong-gong-zu-jian-tian-jia-shi-yong-wen-dang/">
+              <h3 class="post-title">
+                公共组件添加使用文档
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

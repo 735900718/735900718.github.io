@@ -1,0 +1,230 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>nginx 搭建简易静态资源服务器配置 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="nginx 搭建简易静态资源服务器配置 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="我一个小前端居然也开始玩服务器了= =
+
+服务器使用windows server2008
+配置流程如下：
+下载
+nginx 下载地址
+修改配置文件
+修改nginx安装目录下的conf/nginx.conf文件：
+http{
+    ...
+..." />
+    <meta name="keywords" content="服务器" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              nginx 搭建简易静态资源服务器配置
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-02-26
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/WSAFKCIbE/" class="post-tag">
+                  # 服务器
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>我一个小前端居然也开始玩服务器了= =</p>
+<!-- more -->
+<p>服务器使用windows server2008</p>
+<h2 id="配置流程如下">配置流程如下：</h2>
+<h3 id="下载">下载</h3>
+<p><a href="http://nginx.org/en/download.html">nginx 下载地址</a></p>
+<h3 id="修改配置文件">修改配置文件</h3>
+<p>修改nginx安装目录下的conf/nginx.conf文件：</p>
+<pre><code class="language-nginx">http{
+    ...
+    server {
+        listen      80; #监听80端口
+        server_name localhost;
+        location    /tiles/ {
+            root    D:/wenjianjia/; #指定根目录
+            try_files @uri @new_uploads; #当前目录下没有指定文件时
+        }
+        location @new_uploads {
+            proxy_redirect off;
+	        proxy_set_header Host $host;
+	        proxy_set_header X-Real-IP $remote_addr;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_pass http:127.0.0.1:9999; #跳转到这个端口下
+        }
+        error_page 404 D:/wenjianjia/404.jpg; #当没有资源时显示这个图片，达到优化404样式的目的
+    }
+    ...
+}
+</code></pre>
+<h3 id="启动服务">启动服务</h3>
+<p>打开nginx安装目录下的nginx.exe文件启动服务，或者nginx安装目录下shift + 右键 =&gt;  在此处打开命令窗口，常用命令：</p>
+<pre><code class="language-nginx">start nginx  //启动nginx服务
+nginx -s reload //重启服务（配置文件修改后需要重启）
+nginx -s stop //快速停止
+nginx -s quit //正常关闭
+</code></pre>
+<h3 id="使用">使用</h3>
+<p>浏览器访问地址<code>localhost/tiles/1.jpg</code>，即访问服务器中<code>D:/wenjianjia/tiles/1.jpg</code>文件。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%B5%81%E7%A8%8B%E5%A6%82%E4%B8%8B">配置流程如下：</a>
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD">下载</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">修改配置文件</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1">启动服务</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8">使用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/li-yong-ding-shi-qi-chu-li-yong-shi-guo-chang-de-ji-suan/">
+              <h3 class="post-title">
+                利用定时器处理用时过长的计算
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>利用定时器处理用时过长的计算 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="利用定时器处理用时过长的计算 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+参考于《javascript忍者秘籍》
+
+了解定时器：
+javascript运行时是单线程执行的，而定时器给予了代码跳出当前这种限制，在一定时间后异步执行的能力。
+场景：
+在业务中遇到了上万级的数据计算，而且计算过后需要有上千的DOM操作..." />
+    <meta name="keywords" content="js" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              利用定时器处理用时过长的计算
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-01-22
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/GJvyCjr9T/" class="post-tag">
+                  # js
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1926723&auto=0&height=66"></iframe>
+<p>参考于《javascript忍者秘籍》</p>
+<!-- more -->
+<h3 id="了解定时器">了解定时器：</h3>
+<p>javascript运行时是单线程执行的，而定时器给予了代码跳出当前这种限制，在一定时间后异步执行的能力。</p>
+<h3 id="场景">场景：</h3>
+<p>在业务中遇到了上万级的数据计算，而且计算过后需要有上千的DOM操作，从AJAX获取数据到渲染到页面上大概用时10S，速度慢到令人发指，且造成的浏览器阻塞直接会导致websocket连接中断。</p>
+<h3 id="模拟场景">模拟场景：</h3>
+<pre><code class="language-javascript">for (var i = 0;i &lt; 100000; i++) {
+  var div = document.createElement('div');
+  div.innerHTML = '&lt;div&gt;' + i + '&lt;/div&gt;';
+  document.documentElement.appendChild(div);
+}
+</code></pre>
+<p>在模拟场景中，页面在chrome63版本中需要6s左右的时间才能渲染完毕（实际时间可能根据电脑不同有差异）。</p>
+<h3 id="分解任务">分解任务：</h3>
+<pre><code class="language-javascript:">var i    = 0,       //提取循环中的i到这里
+    boot = 2000;    //一次计算中的最大计算次数
+(function xunhuan() {
+  for (;i &lt; 100000 &amp;&amp; i &lt; boot;i++) {
+    var div = document.createElement('div');
+    div.innerHTML = '&lt;div&gt;' + i + '&lt;/div&gt;';
+    document.documentElement.appendChild(div);
+  }
+  boot += 2000;
+  if (i &lt; 100000) setTimeout(xunhuan, 0);
+})();
+</code></pre>
+<p>任务分解后，虽然总的计算时长不会变短，但是有效的避免了浏览器阻塞，且用户看到数据需要等待的渲染时间就减少到了300+ms了（一次boot所需的渲染时长），极大的提升了用户体验。</p>
+<h3 id="总结">总结：</h3>
+<p>在以后的业务中，再遇到大量数据计算或DOM操作时，就可以利用定时器分解任务，将一次大的计算分解成若干个小的定时器计算，避免浏览器阻塞，提升用户体验。</p>
+<p>PS：还可以使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Worker">worker</a>进行数据计算</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%BA%86%E8%A7%A3%E5%AE%9A%E6%97%B6%E5%99%A8">了解定时器：</a></li>
+<li><a href="#%E5%9C%BA%E6%99%AF">场景：</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E5%9C%BA%E6%99%AF">模拟场景：</a></li>
+<li><a href="#%E5%88%86%E8%A7%A3%E4%BB%BB%E5%8A%A1">分解任务：</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/callapply-he-bind-de-shi-yong-zi-shi/">
+              <h3 class="post-title">
+                call、apply和bind的使用姿势
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

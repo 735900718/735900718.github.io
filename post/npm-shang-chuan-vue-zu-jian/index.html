@@ -1,0 +1,247 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>npm上传vue组件 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="npm上传vue组件 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="用vue也有一段时间了，是时候简单做几个组件了。
+
+初始化
+使用脚手架初始化一个vue项目：
+vue init webpack-simple myComponent
+修改目录结构
+├── README.md
+├── index.html
+├..." />
+    <meta name="keywords" content="vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              npm上传vue组件
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-07-20
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>用vue也有一段时间了，是时候简单做几个组件了。</p>
+<!-- more -->
+<h3 id="初始化">初始化</h3>
+<p>使用脚手架初始化一个vue项目：<br>
+<code>vue init webpack-simple myComponent</code></p>
+<h3 id="修改目录结构">修改目录结构</h3>
+<pre><code>├── README.md
+├── index.html
+├── package.json
+├── src
+│   ├── App.vue
+│   ├── HelloWorld.vue  // =&gt; 组件
+│   ├── index.js        // =&gt; 打包入口文件
+│   └── main.js
+└── webpack.config.js
+</code></pre>
+<h3 id="indexjs打包入口文件代码"><code>index.js</code>打包入口文件代码</h3>
+<pre><code class="language-javascript">import myComponent from './my-component.vue'
+export default myComponent
+if (typeof window !== 'undefined' &amp;&amp; window.Vue) {
+  window.Vue.component('my-component', myComponent)
+}
+</code></pre>
+<h3 id="修改webpackconfigjs打包文件">修改<code>webpack.config.js</code>打包文件</h3>
+<pre><code class="language-javascript">module.exports = {
+  entry: './src/index.js',  // 打包入口文件修改
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'my-component.min.js',   // 修改出口文件名
+    library: 'my-component',  // 库的名称
+    libraryTarget: 'umd',     // 支持CMD、AMD和全局window的导出方式
+    umdNamedDefine: true      // 在UMD库中使用命名的AMD模块
+  },
+}
+</code></pre>
+<h3 id="修改pagkagejson文件">修改<code>pagkage.json</code>文件</h3>
+<pre><code class="language-json">{
+  ...
+  &quot;main&quot;: &quot;dist/my-component.min.js&quot;,
+  &quot;private&quot;: false
+  ...
+}
+</code></pre>
+<h3 id="打包上传">打包&amp;上传</h3>
+<p><code>npm run build</code>打包文件</p>
+<p><a href="https://www.npmjs.com/">npm官网</a>注册账号</p>
+<p>使用<code>npm login</code>命令登录账号（ps：登陆后可以使用<code>npm howami</code>查看登录情况）</p>
+<p><code>npm publish</code>上传插件</p>
+<p><code>npm unpublish</code>删除插件<br>
+<code>npm unpublish@1.0.0</code>删除插件1.0.0版本<br>
+(ps：删除后24小时内禁止再次上传)</p>
+<h3 id="附赠">附赠</h3>
+<p><a href="https://www.npmjs.com/~hebxtlyk?tab=packages">我的npm插件地址</a>，目前上传了两个插件，喜欢的可以下载试试</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96">初始化</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">修改目录结构</a></li>
+<li><a href="#indexjs%E6%89%93%E5%8C%85%E5%85%A5%E5%8F%A3%E6%96%87%E4%BB%B6%E4%BB%A3%E7%A0%81"><code>index.js</code>打包入口文件代码</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9webpackconfigjs%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6">修改<code>webpack.config.js</code>打包文件</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9pagkagejson%E6%96%87%E4%BB%B6">修改<code>pagkage.json</code>文件</a></li>
+<li><a href="#%E6%89%93%E5%8C%85%E4%B8%8A%E4%BC%A0">打包&amp;上传</a></li>
+<li><a href="#%E9%99%84%E8%B5%A0">附赠</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/vue-clielementuiv-charts-kai-fa-zhong-yu-dao-de-wen-ti/">
+              <h3 class="post-title">
+                vue-cli+elementUI+v-charts开发中遇到的问题
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

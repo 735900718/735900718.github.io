@@ -1,0 +1,236 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSS渐变边框 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CSS渐变边框 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="渐变？！不就是linear-gradient么！这个简单啊，这样那样一下不就出来了么。。。然后就出错了= =
+
+先来复习一下linear-gradient()这个CSS函数：
+第一个参数是angle渐变方向：可以不写，默认为to botto..." />
+    <meta name="keywords" content="css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CSS渐变边框
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-04-19
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/jZw4Ggxq5/" class="post-tag">
+                  # css
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>渐变？！不就是linear-gradient么！这个简单啊，这样那样一下不就出来了么。。。然后就出错了= =</p>
+<!-- more -->
+<h3 id="先来复习一下linear-gradient这个css函数">先来复习一下linear-gradient()这个CSS函数：</h3>
+<p>第一个参数是angle渐变方向：可以不写，默认为to bottom ，也可以写作: 180deg。</p>
+<p>可选值有：<br>
+to left：设置渐变为从右到左。相当于: 270deg。<br>
+to right：设置渐变从左到右。相当于: 90deg。<br>
+to top：设置渐变从下到上。相当于: 0deg。<br>
+to bottom：设置渐变从上到下。相当于: 180deg。</p>
+<p>后面的参数是颜色参数 同时可以标记颜色坐标，以百分比的形式标注，中间以空格隔开。</p>
+<p>例：linear-gradient(to bottom, #fff 0%, #333 100%);</p>
+<p>好了，回忆结束。</p>
+<hr>
+<p>border使用渐变的方法：</p>
+<p>border-image: linear-gradient(to bottom, #fff 0%, blue 100%);</p>
+<p>设置完之后绚丽的色彩渐变就出来了~~</p>
+<p>但是当加上圆角border-radius的时候问题就出来了，两个属性不能同时使用，这就很尴尬了。。。</p>
+<p>找了一些资料后，换一个思路：</p>
+<p>使用背景色渐变，然后在再上面盖一层模块，给下层背景空留出一个边框的距离，于是一个渐变的边框出来~ 下面是代码：</p>
+<pre><code class="language-html">	&lt;style lang=&quot;less&quot;&gt;
+	@besic: #0079F3;
+	@border-width: 3px;
+		.btn{
+			display: inline-block;
+		  	position: relative;
+		  	margin: @border-width;
+		  	width: 10rem;
+			line-height: 2.75rem;
+			height: 2.75rem;
+			text-align: center;
+			color: @besic;
+		    border-radius: 16px;
+		    background: #fff;
+		    cursor: pointer;
+		    transition: all .5s;
+		    &amp;:after {
+		    	position: absolute;
+			    top: -@border-width; bottom: -@border-width;
+			    left: -@border-width; right: -@border-width;
+			    background: linear-gradient(to right,#4AE6B1, #4AA2F4);
+			    content: '';
+			    z-index: -1;
+			    border-radius: 16px;
+		    }
+		    &amp;:hover{
+		    	color: #fff;
+		    	background: linear-gradient(to right,#4AE6B1, #4AA2F4);
+		    }
+		}
+	&lt;/style&gt;
+
+
+	&lt;div class=&quot;btn&quot;&gt; 按钮 &lt;/div&gt;
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%85%88%E6%9D%A5%E5%A4%8D%E4%B9%A0%E4%B8%80%E4%B8%8Blinear-gradient%E8%BF%99%E4%B8%AAcss%E5%87%BD%E6%95%B0">先来复习一下linear-gradient()这个CSS函数：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/jian-jin-shi-tu-pian/">
+              <h3 class="post-title">
+                渐进式图片
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

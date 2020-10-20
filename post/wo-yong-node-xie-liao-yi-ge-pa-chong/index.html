@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我用node写了一个爬虫 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="我用node写了一个爬虫 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="用node爬取页面中的新闻保存到本地
+
+
+背景：公司官网是我写的纯静态页面，没有后台系统，前两天突然告诉我要同步一下公司公众号的新闻。之前一篇一篇的增加，都是直接CV过来的，也不算多麻烦，这次好长时间没更新了，粗略扫了一眼，大概10+快20..." />
+    <meta name="keywords" content="node" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              我用node写了一个爬虫
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-01-02
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/owlw4KfXU/" class="post-tag">
+                  # node
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>用node爬取页面中的新闻保存到本地</p>
+<!--more -->
+<blockquote>
+<p>背景：公司官网是我写的纯静态页面，没有后台系统，前两天突然告诉我要同步一下公司公众号的新闻。之前一篇一篇的增加，都是直接CV过来的，也不算多麻烦，这次好长时间没更新了，粗略扫了一眼，大概10+快20条了吧，身为一个开发人员，一个个CV太没效率了，于是乎...</p>
+</blockquote>
+<h3 id="准备工具">准备工具</h3>
+<ul>
+<li>
+<p><a href="http://nodejs.cn/api/fs.html">fs</a>: 保存文件</p>
+</li>
+<li>
+<p><a href="https://github.com/axios/axios">axios</a>: 负责请求公众号新闻页面信息</p>
+</li>
+<li>
+<p><a href="https://cheerio.js.org/">cheerio</a>: 专为服务器设计的核心jQuery的快速，灵活和精益实现</p>
+</li>
+</ul>
+<h3 id="分析">分析</h3>
+<ol>
+<li>
+<h4 id="本地代码分析">本地代码分析</h4>
+<p>官网用的<code>Nuxt</code>框架，新闻被我统一放到了<code>assets/news/</code>目录下，每篇新闻都是递增序列命名的js文件，如：<code>11.js</code>。包含内容如下：</p>
+<pre><code class="language-javascript">export default {
+  &quot;title&quot;: &quot;新闻标题&quot;,
+  &quot;source&quot;: &quot;新闻源&quot;,
+  &quot;time&quot;: &quot;新闻发布时间&quot;,
+  &quot;main&quot;: &quot;新闻内容&quot;
+}
+</code></pre>
+<p>图片则在另一个图片文件下以<code>news-11-*.png</code>的命名方式保存。</p>
+</li>
+<li>
+<h4 id="公众号新闻页面代码分析">公众号新闻页面代码分析</h4>
+<p>以这篇<a href="https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484688&amp;idx=1&amp;sn=98e2cc7cce402f508cd5ca0686044f54&amp;chksm=fdcb60dbcabce9cd3bcd17eebbe84de3a4fb0f93924e55b5a16b53491e6137a1143b86e20f48&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262825200&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd">新闻</a>为例，打开开发者工具，查找需要的信息</p>
+<pre><code class="language-javascript">export default {
+ 	   &quot;title&quot;: $('.rich_media_title').text(),
+  &quot;source&quot;: $('.rich_media_meta_nickname').text(),
+  &quot;time&quot;: $('.rich_media_meta_text').text(),
+  &quot;main&quot;: $('.rich_media_content').html()
+}
+</code></pre>
+</li>
+<li>
+<h4 id="获取图片">获取图片</h4>
+<pre><code class="language-javascript">axios({
+  method: 'get',
+  url: src,
+  responseType: 'stream',
+}).then(data =&gt; {
+  data.data.pipe(fs.createWriteStream(`./assets/web/news-${newsId}-${(index)}.${type}`));
+}).catch(err =&gt; {
+  console.log(src, '图片下载失败', err)
+})
+</code></pre>
+</li>
+</ol>
+<h3 id="爬取代码">爬取代码</h3>
+<p>项目目录下创建<code>getNews.js</code>文件：</p>
+<pre><code class="language-javascript">function getNews(newsUrl, newsId, newsDate) {//这里多传一个newsDate，是因为公众号新闻的日期会格式化为『上周』等中文，这里就懒得再反格式化为纯数字了
+  //请求新闻页面
+  return axios.get(url)
+    .then(response =&gt; {
+      //1.获取document
+      var html_string = response.data.toString();
+      var $ = cheerio.load(html_string, { decodeEntities: false }); // 传递页面到模块
+      //此时我们已经可以像用 JQ 一样，使用 $ 进行元素获取了
+
+      //2.处理img图片
+      $('.rich_media_content img').each((index, img) =&gt; {
+        var type = $(img).attr('data-type');
+        //将图片地址转换成本地图片
+        $(img).attr('src', &quot;${require('~/assets/web/news-&quot; + newsId + &quot;-&quot; + (index) + &quot;.&quot; + type + &quot;')}&quot;);
+
+        //将图片下载到本地
+        axios({
+          method: 'get',
+          url: src,
+          responseType: 'stream',
+        }).then(data =&gt; {
+          data.data.pipe(fs.createWriteStream(`./assets/web/news-${newsId}-${(index)}.${type}`));
+        }).catch(err =&gt; {
+          console.log(src, '图片下载失败', err)
+        })
+      })
+
+      //3.处理正文
+      let main = '';
+      $('.rich_media_content section').each((idx, item) =&gt; {
+        //将引号替换一下，修复格式错误
+        $(item).attr('style', $(item).attr('style').replace(/\&quot;/g, &quot;'&quot;))
+      });
+      main += $('.rich_media_content').html();
+
+      //4.写入文件
+      fs.writeFileSync(`./assets/news/news-${newsId}.js`, `export default {
+        &quot;title&quot;: &quot;${$('.rich_media_title').text().trim()}&quot;,
+        &quot;source&quot;: &quot;四维智联&quot;,
+        &quot;time&quot;: &quot;${newsDate}&quot;,
+        &quot;main&quot;: \`${main.trim()}\`
+      }`)
+    })
+    .catch(error =&gt; {
+      console.log(error)
+    })
+}
+</code></pre>
+<p>node 执行以上方法，喝口水的功夫，一篇新闻就复制下来了~</p>
+<p>再加强一下，把所有地址放到一个数组里，一次就全部搞定了~</p>
+<pre><code class="language-javascript">let newsList = [
+  {
+    url: 'https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484688&amp;idx=1&amp;sn=98e2cc7cce402f508cd5ca0686044f54&amp;chksm=fdcb60dbcabce9cd3bcd17eebbe84de3a4fb0f93924e55b5a16b53491e6137a1143b86e20f48&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262825200&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd',
+    id: 1,
+    date: 'XXXX-XX-XX'
+  },
+  {
+    url: 'https://mp.weixin.qq.com/s?__biz=MzU4OTY1NzI1Mg==&amp;mid=2247484714&amp;idx=1&amp;sn=7becb9f151a0a9312d9386894eeaaabe&amp;chksm=fdcb60e1cabce9f740175a39102c8dde82b33e9a61f4eb279cdb4d3ab3f0c3cbade87de97ce8&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;sharer_sharetime=1577262765908&amp;sharer_shareid=1e52e4bd2457f4d240357ec73082fd55#rd',
+    id: 2,
+    date: 'XXXX-XX-XX'
+  }
+];
+
+for (var key in newsList) {
+  let item = newsList[key];
+  getNews(item.url, item.id, item.date);
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E5%85%B7">准备工具</a></li>
+<li><a href="#%E5%88%86%E6%9E%90">分析</a>
+<ul>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">本地代码分析</a></li>
+<li><a href="#%E5%85%AC%E4%BC%97%E5%8F%B7%E6%96%B0%E9%97%BB%E9%A1%B5%E9%9D%A2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">公众号新闻页面代码分析</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%9B%BE%E7%89%87">获取图片</a></li>
+</ul>
+</li>
+<li><a href="#%E7%88%AC%E5%8F%96%E4%BB%A3%E7%A0%81">爬取代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/gong-zhong-hao-app-nei-qian-h5/">
+              <h3 class="post-title">
+                公众号APP内嵌H5
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

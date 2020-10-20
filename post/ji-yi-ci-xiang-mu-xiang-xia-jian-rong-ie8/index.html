@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>记一次项目向下兼容ie8 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="记一次项目向下兼容ie8 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="祝其他浏览器早日爆炸，我大chrome终将一统江山。
+
+项目起初：
+  这个需要响应式布局～
+  OK没问题，反正是IE9以上，rem + media媒体查询 分分钟给撸出来:)
+
+十年之后：
+  项目现在要兼容到IE8，就差一个版本应该..." />
+    <meta name="keywords" content="html" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              记一次项目向下兼容ie8
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-11-21
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/AJFzh8WYb/" class="post-tag">
+                  # html
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>祝其他浏览器早日爆炸，我大chrome终将一统江山。</p>
+<!-- more -->
+<pre><code>项目起初：
+  这个需要响应式布局～
+  OK没问题，反正是IE9以上，rem + media媒体查询 分分钟给撸出来:)
+
+十年之后：
+  项目现在要兼容到IE8，就差一个版本应该很好做吧？
+  A U kidding me?你以为就一个数字的差距呢。。。
+  反正甲方要求IE8了，你看着调整一下吧。
+  。。。。
+</code></pre>
+<p>所以，我又打开了恶心的IE，一个页面一个页面得开始调整不兼容的属性了。</p>
+<h3 id="不兼容的属性">不兼容的属性</h3>
+<h4 id="media媒体查询">media媒体查询</h4>
+<pre><code class="language-html">在&lt;/head&gt;前加上
+&lt;script src=&quot;https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h4 id="html5标签">html5标签</h4>
+<pre><code class="language-html">在&lt;/head&gt;前加上
+&lt;script src=&quot;https://cdn.bootcss.com/html5shiv/r29/html5.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h4 id="rem单位">rem单位</h4>
+<pre><code class="language-html">在&lt;/body&gt;前加上
+&lt;script src=&quot;rem.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>以上三个还好说，引一下插件就行了。。 细节的调整才是最痛苦的。。</p>
+<h4 id="opacity">opacity</h4>
+<pre><code class="language-css">  opacity: 0;
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);  // IE8的写法
+
+  opacity: 1;
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+</code></pre>
+<h4 id="background-size">background-size</h4>
+<p>这个属性在IE8是不支持的，更不要说页面里大量的cover和contain了<br>
+修改这里时，我用了前辈写的<a href="https://github.com/louisremi/background-size-polyfill">polyfill</a></p>
+<p>使用方法：</p>
+<pre><code class="language-css">  .selector { 
+    background-size：cover ;
+    / * url是相对于页面文档，而不是css文件！* / 
+    / *优选绝对URL以避免混淆。* / 
+    -ms-behavior：url（/backgroundsize.min.htc）;
+  }
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%8D%E5%85%BC%E5%AE%B9%E7%9A%84%E5%B1%9E%E6%80%A7">不兼容的属性</a>
+<ul>
+<li><a href="#media%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2">media媒体查询</a></li>
+<li><a href="#html5%E6%A0%87%E7%AD%BE">html5标签</a></li>
+<li><a href="#rem%E5%8D%95%E4%BD%8D">rem单位</a></li>
+<li><a href="#opacity">opacity</a></li>
+<li><a href="#background-size">background-size</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/qian-duan-ji-chu-zhi-shi/">
+              <h3 class="post-title">
+                前端基础知识
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

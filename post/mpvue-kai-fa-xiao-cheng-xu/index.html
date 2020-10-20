@@ -1,0 +1,473 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mpvue开发小程序 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="mpvue开发小程序 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="本次小程序使用 mpvue+iview 开发,期间遇到了不少坑,这里总结如下:
+
+项目搭建
+1.安装mpvue环境
+vue init mpvue/mpvue-quickstart my-project
+
+cd my-project
+npm ..." />
+    <meta name="keywords" content="小程序,vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              mpvue开发小程序
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-11-23
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/TTcbT0JeR/" class="post-tag">
+                  # 小程序
+                </a>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>本次小程序使用 mpvue+iview 开发,期间遇到了不少坑,这里总结如下:</p>
+<!-- more -->
+<h3 id="项目搭建">项目搭建</h3>
+<p>1.安装mpvue环境</p>
+<pre><code>vue init mpvue/mpvue-quickstart my-project
+
+cd my-project
+npm install
+npm run dev
+</code></pre>
+<p>2.安装iview组件</p>
+<p><a href="https://github.com/TalkingData/iview-weapp">github</a>下载组件,然后将<code>dist</code>目录拷贝到static文件夹下，然后需要注意的是小程序要将<strong>详情 =&gt; ES6转ES5</strong>打开</p>
+<h3 id="修改navigationbar信息">修改<code>navigationBar</code>信息</h3>
+<p>在页面同级文件夹下创建<code>main.json</code>文件，具体配置和<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/config.html">小程序api</a>一致</p>
+<h3 id="页面新建-跳转">页面新建、跳转</h3>
+<h4 id="新建页面">新建页面</h4>
+<p>除了需要在<code>src/pages</code>文件夹内按照格式创建<code>index.vue</code>和<code>main.js</code>文件外，还需要在<code>src/app.json</code>中添加页面路径信息</p>
+<h4 id="页面跳转">页面跳转</h4>
+<p>使用<code>wx.navigateTo</code>方法进行页面跳转，路径参照<code>src/pages</code>文件夹内页面存放路径</p>
+<h3 id="iview组件样式修改">iview组件样式修改</h3>
+<p>在页面内想要修改组件样式，即使加/deep/ 或者全局样式也不能修改，暂时没有好的解决办法，<strong>只能在源码内进行修改</strong>。</p>
+<h3 id="i-swipeout组件相关事项">i-swipeout组件相关事项</h3>
+<p>右侧滑动按钮数据格式必须固定为:</p>
+<pre><code>// 貌似必须是这样的,否则不会生效,我在这里设置了
+[{},{}]
+</code></pre>
+<blockquote>
+<p>自定义右侧样式</p>
+</blockquote>
+<pre><code class="language-html">&lt;i-swipeout
+  i-class=&quot;i-swipeout-demo-item&quot;
+  :operateWidth=&quot;150&quot;&gt;
+  &lt;!--operateWidth设定右侧按钮宽度--&gt;
+  &lt;!--内容插槽--&gt;
+  &lt;view slot=&quot;content&quot;&gt;
+    &lt;view class=&quot;i-swipeout-des&quot;&gt;
+      &lt;view class=&quot;i-swipeout-des-h2&quot;&gt;第七个小矮人&lt;/view&gt;
+      &lt;view class=&quot;i-swipeout-des-detail&quot;&gt;乐观善良的7个小矮人原本过着简单快乐的生活，不料诅咒公主的巫婆利用小矮人进入.&lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+  &lt;!--右侧按钮插槽--&gt;
+  &lt;view slot=&quot;button&quot; class=&quot;i-swipeout-demo-button-group&quot;&gt;
+    &lt;view class=&quot;i-swipeout-demo-button&quot;&gt;删除&lt;/view&gt;
+  &lt;/view&gt;
+&lt;/i-swipeout&gt;
+</code></pre>
+<h4 id="slot">slot</h4>
+<p>目前我是用的<code>mpvue@1.0.11</code>版本,关于 <code>slot</code>存在以下问题:</p>
+<ul>
+<li>同一个组件不支持多个插槽!!!</li>
+</ul>
+<h4 id="删除-pages-页面后的问题">删除 pages 页面后的问题</h4>
+<p>mpvue 开发模式是每次保存代码修改后自动打包到 dist 文件夹下的,但是删除页面后,dist 内还保留原页面的打包文件,会导致小程序报错</p>
+<h3 id="事件相关">事件相关</h3>
+<h4 id="小程序事件">小程序事件</h4>
+<p>原生 Evnet 内容都被整理到了 mp 对象下,例如:</p>
+<blockquote>
+<p>用户信息获取<code>e.detail.userInfo</code>变成了<code>e.mp.detail.userInfo</code></p>
+</blockquote>
+<h4 id="事件修饰符">事件修饰符</h4>
+<p>不支持<code>.self</code>修饰符</p>
+<blockquote>
+<p>如何实现&quot;self&quot;</p>
+</blockquote>
+<p>小程序是没有办法获取 dom 元素的,但是可以获取元素的 id, 例如:</p>
+<pre><code class="language-html">&lt;cover-view
+    id=&quot;modal&quot;
+    @tap=&quot;closeModal&quot;&gt;
+    &lt;cover-view&gt;点我不会关闭模态框&lt;/cover-view&gt;
+&lt;/cover-view&gt;
+&lt;script&gt;
+closeModal (e) {
+  console.log(e);
+  if (e.currentTarget.id === 'modal') {
+    this.$emit('update:visible', false);
+  }
+}
+&lt;/script&gt;
+</code></pre>
+<h3 id="cover-view-cover-image">cover-view &amp;&amp; cover-image</h3>
+<p>坑一: css 样式并不能全部支持,只支持基本的定位 scale rotate opacity 等(不支持 background-image,只能是用 cover-image)</p>
+<p>坑二: cover-image 不显示的原因:</p>
+<ul>
+<li><strong>不支持绝对路径,只能是用相对路径</strong></li>
+<li>使用不支持的 css 属性有可能导致图片不显示</li>
+</ul>
+<h3 id="引入-echarts-制作地图图表">引入 echarts 制作地图图表</h3>
+<p><code>npm i mpvue-echarts echarts</code> 安装组件</p>
+<blockquote>
+<p>相关代码如下:</p>
+</blockquote>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div class=&quot;echarts-wrap&quot;&gt;
+    &lt;mpvue-echarts
+      id=&quot;mychart-dom-area&quot;
+      canvas-id=&quot;mychart-area&quot;
+      :echarts=&quot;echarts&quot;
+      :onInit=&quot;onInit&quot;&gt;&lt;/mpvue-echarts&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+import * as echarts from 'echarts'
+// import * as echarts from '_/echarts.min.js' // 定制的 echarts 仅支持 map 功能
+import mpvueEcharts from 'mpvue-echarts'
+import geoJson from './china'   //地图数据 可以在https://github.com/apache/incubator-echarts/ 找所需的地图数据使用
+function initChart(canvas, width, height) {
+  const chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+
+  echarts.registerMap('china', geoJson);
+
+  const option = {};
+  chart.setOption(option);
+
+  return chart; // 返回 chart 后可以自动绑定触摸操作
+}
+export default {
+  components: {
+    mpvueEcharts
+  },
+  data () {
+    return {
+      echarts,
+      onInit: initChart
+    }
+  }
+}
+&lt;/script&gt;
+&lt;style&gt;
+.echarts-wrap {
+  width: 100%;
+  height: 300px;
+}
+&lt;/style&gt;
+</code></pre>
+<h3 id="生命周期">生命周期</h3>
+<p>所有页面内的 created 周期内的方法会在小程序页面打开时一次性全执行.</p>
+<h3 id="map-组件">map 组件</h3>
+<h4 id="mapcontextincludepointsobject-object">MapContext.includePoints(Object object)</h4>
+<p>padding 属性的值一定要写成<code>[number, number, number, number]</code>这样的,虽然安卓机只能识别第一个,上下左右padding值一致,但是iphone必须写满四个值才行</p>
+<h4 id="regionchange事件绑定">regionchange事件绑定</h4>
+<p>因为使用了 mpvue 编译，该事件要绑定成<code>&lt;map @regionchange=&quot;regionChange&quot; @begin=&quot;regionChangeBegin&quot; @end=&quot;regionChangeEnd&quot;&gt;&lt;map&gt;</code></p>
+<blockquote>
+<p>只绑定其中一个事件是不生效的</p>
+</blockquote>
+<h4 id="polyline">polyline</h4>
+<p>数组中的点位数量不要太多，否则会导致小程序崩溃，具体数量自己衡量，每个机型的也不一样。</p>
+<blockquote>
+<p>ios系统开启省电模式后，可以处理的点位数量将变少</p>
+</blockquote>
+<h4 id="marker">marker</h4>
+<p>如果给 marker 添加 name 属性的话，就会有一个默认的点击弹出 name 效果，类似 callout 但巨丑无比。。。 当时还很纳闷这个功能怎么来的。。。</p>
+<h3 id="获取用户信息">获取用户信息</h3>
+<p>getUserInfo获取用户信息权限,原来可以直接使用 wx.getUserInfo() 获取,现在必须使用<code>&lt;button open-type=&quot;getUserInfo&quot; lang=&quot;zh_CN&quot; @getuserinfo=&quot;onGotUserInfo&quot;&gt;确定&lt;/button&gt;</code>按钮来获取.注意!!!<strong>获取权限后,即使刷新页面还是再次登录,只要没有重新小程序再次调用 wx.getUserInfo() 的话都是会失败的?</strong>,解决方法是使用 onGoutUserInfo 作为首次获取信息的方法,后续再打开小程序时走 wx.getUserInfo 中的方法</p>
+<h3 id="mpvue-页面关闭后再次打开会保留上次关闭的数据">mpvue 页面关闭后再次打开会保留上次关闭的数据</h3>
+<p>原因是 mpvue 多页面共用了一个 vm 对象,解决方法可以参考:</p>
+<p><a href="!https://github.com/Meituan-Dianping/mpvue/issues/140">https://github.com/Meituan-Dianping/mpvue/issues/140</a></p>
+<h3 id="scroll-view">scroll-view</h3>
+<p>滚动组件中使用 absolute 会失效,解决方式需要置顶的内容放在滚动组件外面.</p>
+<h3 id="不知名-bug">不知名 bug</h3>
+<blockquote>
+<p>函数太乱(?) 会导致循环不执行,下面这个 map 就神奇的不循环了</p>
+</blockquote>
+<pre><code class="language-javascript">[a, ...b].map(item =&gt; {
+    //...
+    if () {
+        //... 
+    } else if () {
+        //...
+    } else {
+        //...
+    }
+    //...
+)
+</code></pre>
+<blockquote>
+<p>cover-img 设置 rotate 会导致图片变大...</p>
+</blockquote>
+<p><a href="!https://developers.weixin.qq.com/community/develop/doc/000aa05c39cff86510b766ed15b400?highLine=rotate">https://developers.weixin.qq.com/community/develop/doc/000aa05c39cff86510b766ed15b400?highLine=rotate</a></p>
+<p><strong>很多时候出现无厘头的 bug 需要让大脑放空一下,出去透透气,等让代码冷静下来,就好了:)</strong></p>
+<h3 id="slot-2">slot</h3>
+<p>写下这段时，我使用的是 mpvue 1.0.13 版本，在 slot 中并不能使用动态数据，如：</p>
+<pre><code class="language-html">&lt;my-comt&gt;
+  &lt;div v-if=&quot;show&quot;&gt;看不看得见&lt;/div&gt;
+  &lt;div&gt;看得见&lt;/div&gt;
+&lt;/my-comt&gt;
+</code></pre>
+<p>当动态控制 show 为 ture 值时，视图也依然不会显示。</p>
+<pre><code class="language-html">&lt;my-comt&gt;
+  &lt;input v-model=&quot;value&quot;/&gt;
+&lt;/my-comt&gt;
+</code></pre>
+<p>当动态控制 value 值为其它值时，视图不会修改。</p>
+<h3 id="地图组件中-marker-无法使用网络图片的问题"><a href="!https://www.cnblogs.com/hitore/p/8505643.html">地图组件中 marker 无法使用网络图片的问题</a></h3>
+<p>需要使用 <code>wx.downloadFile()</code> 方法先将图片下载下来再使用</p>
+<h3 id="setdata-数据更新问题">setData 数据更新问题</h3>
+<blockquote>
+<p>参考文章：<a href="https://www.cnblogs.com/imgss/p/9700617.html">在mpvue中使用map如何避坑</a></p>
+</blockquote>
+<p>mpvue 中更新数据是将 data 中的所有数据同步到小程序中，可能会导致以下 bug：</p>
+<ol>
+<li>导致某些未修改的数据更新</li>
+<li>导致小程序数据崩溃卡死</li>
+</ol>
+<p>解决办法：</p>
+<pre><code class="language-javascript">//数据写入方式改为原生方法：
+this.$mp.page.setData({
+  '$root[0].latitude': this.$data.latitude,
+  '$root[0].longitude': this.$data.longitude,
+  '$root[0].markers': this.$data.markers,
+  '$root[0].groupId': this.$data.groupId,
+  '$root[0].selected': this.$data.selected,
+  '$root[0].showMarkers': showMarkers,
+  '$root[0].polyline': polyline,
+})
+</code></pre>
+<h3 id="canvas-绘制海报">canvas 绘制海报</h3>
+<p>部分安卓手机使用<code>canvasToTempFilePath</code>生成海报图片时，会出现各种奇怪的排版错误。</p>
+<p>解决方法，添加定时器，例：</p>
+<pre><code class="language-javascript">ctx.draw(
+  false,
+  setTimeout(() =&gt; {
+    wx.canvasToTempFilePath({
+      x: 0,
+      y: 0,
+      width: W,
+      height: H,
+      destWidth: 4 * W, //为了解决清晰度问题，输出图像的尺寸为源图像的4倍
+      destHeight: 4 * H,
+      canvasId: 'shareImg',
+      success: res =&gt; {
+        /* 这里 就可以显示之前写的 预览区域了 把生成的图片url给image的src */
+        console.log('draw succ==============', res.tempFilePath);
+      },
+      fail: function (res) {
+        console.log('darw fail==============', res);
+      }
+    })
+  }, 300) //定时器延时给大一些，最少200-300才行
+)
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA">项目搭建</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9navigationbar%E4%BF%A1%E6%81%AF">修改<code>navigationBar</code>信息</a></li>
+<li><a href="#%E9%A1%B5%E9%9D%A2%E6%96%B0%E5%BB%BA-%E8%B7%B3%E8%BD%AC">页面新建、跳转</a>
+<ul>
+<li><a href="#%E6%96%B0%E5%BB%BA%E9%A1%B5%E9%9D%A2">新建页面</a></li>
+<li><a href="#%E9%A1%B5%E9%9D%A2%E8%B7%B3%E8%BD%AC">页面跳转</a></li>
+</ul>
+</li>
+<li><a href="#iview%E7%BB%84%E4%BB%B6%E6%A0%B7%E5%BC%8F%E4%BF%AE%E6%94%B9">iview组件样式修改</a></li>
+<li><a href="#i-swipeout%E7%BB%84%E4%BB%B6%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9">i-swipeout组件相关事项</a>
+<ul>
+<li><a href="#slot">slot</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4-pages-%E9%A1%B5%E9%9D%A2%E5%90%8E%E7%9A%84%E9%97%AE%E9%A2%98">删除 pages 页面后的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E7%9B%B8%E5%85%B3">事件相关</a>
+<ul>
+<li><a href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%BA%8B%E4%BB%B6">小程序事件</a></li>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6">事件修饰符</a></li>
+</ul>
+</li>
+<li><a href="#cover-view-cover-image">cover-view &amp;&amp; cover-image</a></li>
+<li><a href="#%E5%BC%95%E5%85%A5-echarts-%E5%88%B6%E4%BD%9C%E5%9C%B0%E5%9B%BE%E5%9B%BE%E8%A1%A8">引入 echarts 制作地图图表</a></li>
+<li><a href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">生命周期</a></li>
+<li><a href="#map-%E7%BB%84%E4%BB%B6">map 组件</a>
+<ul>
+<li><a href="#mapcontextincludepointsobject-object">MapContext.includePoints(Object object)</a></li>
+<li><a href="#regionchange%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A">regionchange事件绑定</a></li>
+<li><a href="#polyline">polyline</a></li>
+<li><a href="#marker">marker</a></li>
+</ul>
+</li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF">获取用户信息</a></li>
+<li><a href="#mpvue-%E9%A1%B5%E9%9D%A2%E5%85%B3%E9%97%AD%E5%90%8E%E5%86%8D%E6%AC%A1%E6%89%93%E5%BC%80%E4%BC%9A%E4%BF%9D%E7%95%99%E4%B8%8A%E6%AC%A1%E5%85%B3%E9%97%AD%E7%9A%84%E6%95%B0%E6%8D%AE">mpvue 页面关闭后再次打开会保留上次关闭的数据</a></li>
+<li><a href="#scroll-view">scroll-view</a></li>
+<li><a href="#%E4%B8%8D%E7%9F%A5%E5%90%8D-bug">不知名 bug</a></li>
+<li><a href="#slot-2">slot</a></li>
+<li><a href="#%E5%9C%B0%E5%9B%BE%E7%BB%84%E4%BB%B6%E4%B8%AD-marker-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87%E7%9A%84%E9%97%AE%E9%A2%98">地图组件中 marker 无法使用网络图片的问题</a></li>
+<li><a href="#setdata-%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98">setData 数据更新问题</a></li>
+<li><a href="#canvas-%E7%BB%98%E5%88%B6%E6%B5%B7%E6%8A%A5">canvas 绘制海报</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/nuxt-zhi-zuo-guan-wang-xiang-mu/">
+              <h3 class="post-title">
+                nuxt制作官网项目
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

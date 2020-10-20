@@ -1,0 +1,523 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>前端基础知识 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="前端基础知识 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="什么是盒子模型/flex 布局/子元素居中/原型链、原型对象、构造函数、实例之间的关系/事件绑定的几种方式/关于http2.0,websocket,https/http状态码/JSONP/CORS/call &amp; apply &amp..." />
+    <meta name="keywords" content="面试" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              前端基础知识
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-08-22
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/a5QCbWFAo-/" class="post-tag">
+                  # 面试
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>什么是盒子模型/flex 布局/子元素居中/原型链、原型对象、构造函数、实例之间的关系/事件绑定的几种方式/关于http2.0,websocket,https/http状态码/JSONP/CORS/call &amp; apply &amp; bind 的区别</p>
+<!-- more -->
+<h3 id="什么是盒子模型">什么是盒子模型？</h3>
+<p>网页设计中常听到的属性：content/padding/border/margin，这些属性用生活中常见的物品比喻————盒子作为比喻理解，盒子模型都具备这些属性。</p>
+<ul>
+<li>
+<p>标准模式盒模型：</p>
+<p>一个模块的总宽度为：width + padding + border + margin</p>
+</li>
+<li>
+<p>怪异模式盒模型（IE内核浏览器，不对doctype进行定义时，会触发怪异模式）：</p>
+<p>一个模块的总宽度为：width(已经包含padding/border) + margin</p>
+</li>
+<li>
+<p>box-sizing: content-box/border-box/inherit</p>
+<ul>
+<li>取值content-box时，采用标准模式盒模型计算</li>
+<li>取值border-box时，采用怪异模式盒模型计算</li>
+</ul>
+</li>
+</ul>
+<h3 id="flex-布局">flex 布局</h3>
+<p>参考网站：<a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html">http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html</a></p>
+<p>需要注意：兼容性IE10+，一旦设定flex布局后，子元素的float/clear/vertical-align将失效</p>
+<ul>
+<li>flex容器包含的属性：
+<ul>
+<li>flex-direction: 决定主轴的方向（即子元素的排列方向）
+<ul>
+<li>row 默认值，主轴为水平方向，起点在左端</li>
+<li>row-reverse 主轴为水平方向，起点在右端</li>
+<li>column 主轴为垂直方向，起点在顶端</li>
+<li>column-reverse 主轴为垂直方向，起点在底端</li>
+</ul>
+</li>
+<li>flex-wrap：如果一条轴线排不下，如何换行
+<ul>
+<li>nowrap 默认值，不换行</li>
+<li>wrap 换行，第一行在上方</li>
+<li>wrap-reverse 换行，第一行在下方</li>
+</ul>
+</li>
+<li>flex-flow: 是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap</li>
+<li>justify-content: 定义了子元素在主轴上的对齐方式
+<ul>
+<li>flex-start 默认值，左对齐</li>
+<li>flex-end 右对齐</li>
+<li>center 居中</li>
+<li>space-between 两端对齐，子元素之间间隔相等</li>
+<li>space-around 子元素距离父元素边界之间也有间隔，且每个项目两侧的间隔相等</li>
+</ul>
+</li>
+<li>align-items: 定义子元素在主轴的交叉轴上如何对齐
+<ul>
+<li>flex-start 交叉轴的起点对齐</li>
+<li>flex-end 交叉轴的终点对齐</li>
+<li>center 交叉轴的中点对齐</li>
+<li>baseline 子元素的第一行文字的基线对齐</li>
+<li>stretch 如果子元素未设置高度或设置为auto，将占满整个容器的高度</li>
+</ul>
+</li>
+<li>align-content: 定义了多根轴线交叉轴方向的对齐方式。如果项目只有一根轴线，该属性不起作用
+<ul>
+<li>flex-start 交叉轴的起点对齐</li>
+<li>flex-end 交叉轴的终点对齐</li>
+<li>center 交叉轴的中点对齐</li>
+<li>space-between 与交叉轴两端对齐，轴线之间的间隔平均分布</li>
+<li>space-around 两端轴线距离父元素边界之间也有间隔,每根轴线两侧的间隔都相等</li>
+<li>stretch: 默认值轴线占满整个交叉轴。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>flex子元素的属性
+<ul>
+<li>order 定义子元素的排列顺序。数值越小，排列越靠前，默认为0
+<ul>
+<li>取值为number</li>
+</ul>
+</li>
+<li>flex-grow 定义子元素的放大比例，默认为0，即如果存在剩余空间，也不放大
+<ul>
+<li>取值为number</li>
+</ul>
+</li>
+<li>flex-shrink 属性定义了子元素的缩小比例，默认为1，即如果空间不足，该子元素将缩小；如果一个子元素的flex-shrink属性为0，其他子元素都为1，则空间不足时，前者不缩小
+<ul>
+<li>取值为number</li>
+</ul>
+</li>
+<li>flex-basis 定义了在分配多余空间之前，子元素占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即子元素的本来大小
+<ul>
+<li>取值为length/auto</li>
+</ul>
+</li>
+<li>flex 属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选
+<ul>
+<li>取值为 none 即：(0 0 auto)</li>
+<li>取值为 auto 即：(1 1 auto)</li>
+<li>&lt;'flex-grow'&gt; (&lt;'flex-shrink'&gt; || &lt;'flex-basis'&gt;)</li>
+</ul>
+</li>
+<li>align-self
+<ul>
+<li>属性允许单个子元素有与其他子元素不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch</li>
+<li>auto</li>
+<li>flex-start</li>
+<li>flex-end</li>
+<li>center</li>
+<li>baseline</li>
+<li>stretch</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="未知宽高的子元素左右垂直居中">未知宽高的子元素左右垂直居中</h3>
+<ul>
+<li>兼容性差：</li>
+</ul>
+<pre><code class="language-css">.父元素 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</code></pre>
+<ul>
+<li>兼容性较差：</li>
+</ul>
+<pre><code class="language-css">.父元素 {
+    position: relative;
+}
+.子元素 {
+    position: absolute;
+    top: 50%; left: 50%;
+    transfrom: translate(-50%, -50%);
+}
+</code></pre>
+<ul>
+<li>兼容性好：</li>
+</ul>
+<pre><code class="language-css">.父元素 {
+    height: 100%;
+    line-height: 100%;
+    text-align: center;
+}
+.子元素 {
+    display: inline-block;
+}
+</code></pre>
+<h3 id="原型链-原型对象-构造函数-实例之间的关系">原型链、原型对象、构造函数、实例之间的关系</h3>
+<p>每个构造函数都有一个原型对象，原型对象都包含一个指向构造函数的指针，而实例都包含一个指向原型对象的内部指针。当原型对象等于另一个类型的实例时，就构成了实例与原型的链条，及原型链。</p>
+<ul>
+<li>构造函数模式：通过构造函数，可以自定义对象的类型的属性和方法。</li>
+</ul>
+<pre><code class="language-javascript">//构造函数
+function Person(name, age, job) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+    this.sayName = function () {
+        alert(this.name);
+    }
+}
+//实例化
+var person = new Person('Greg', 27, 'Doctor');
+</code></pre>
+<ul>
+<li>构造函数存在的问题：每个实例对象都会把方法重新创建一次（于是就有了，原型模式）</li>
+<li>原型模式：每个函数都有一个prototype(原形)属性，这个属性是一个指针，指向一个对象，用于包含特定类型的所有实例共享的属性和方法。</li>
+</ul>
+<pre><code class="language-javascript">//上面的构造函数可以修改为：
+function Person(name, age, job) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+}
+Person.prototype.sayName = function () {
+    alert(this.name);
+}
+</code></pre>
+<h3 id="dom事件绑定的几种方式">DOM事件绑定的几种方式</h3>
+<pre><code>//直接写在HTML标签属性中
+&lt;div onlick=&quot;fun()&quot;&gt;点击事件&lt;/div&gt;
+//原生写法：
+DOM.onclick = function() {}
+    //IE9+
+DOM.addEventListener('click',function(e){
+    console.log(e.target)   //获取点击中的元素，可实现事件代理
+})
+    //IE8以下
+DOM.attachEvent('click',function(e) {})
+//jquery写法：
+$(DOM).click(function () {})
+$(DOM).on('click',function () {})
+$(document).on('click','DOM',function () {})
+</code></pre>
+<h3 id="关于http20websockethttps">关于http2.0,websocket,https</h3>
+<ul>
+<li>http2.0相较于http1.1的提升：参考网站<a href="https://www.zhihu.com/question/34074946">https://www.zhihu.com/question/34074946</a>
+<ul>
+<li>多路复用 (Multiplexing)
+<ul>
+<li>同时请求大量资源的速度提升</li>
+</ul>
+</li>
+<li>二进制分帧
+<ul>
+<li>单点链接多资源的方式，减少服务器链接的压力，内存占用更少，链接吞吐量更大</li>
+<li>由于TCP连接的减少而使网络拥塞的到改善，同时启动的时间减少，使拥塞和丢包恢复速度更快</li>
+</ul>
+</li>
+<li>首部压缩
+<ul>
+<li>支持对HTTP首部的压缩</li>
+</ul>
+</li>
+<li>服务端推送
+<ul>
+<li>服务器可以对客户端的一个请求发送多个响应</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>websocket
+<ul>
+<li>WebSocket协议是基于TCP的一种新的网络协议。它实现了浏览器与服务器全双工(full-duplex)通信——允许服务器主动发送信息给客户端。</li>
+</ul>
+</li>
+<li>https
+<ul>
+<li>https是以安全为目的http通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。</li>
+</ul>
+</li>
+</ul>
+<h3 id="http状态码的含义">http状态码的含义</h3>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1XX</td>
+<td>消息</td>
+</tr>
+<tr>
+<td>2XX</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>3XX</td>
+<td>重定向</td>
+</tr>
+<tr>
+<td>4XX</td>
+<td>请求错误</td>
+</tr>
+<tr>
+<td>5XX、6XX</td>
+<td>服务器错误</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dom事件中的target与currenttarget的区别">DOM事件中的target与currentTarget的区别</h3>
+<ul>
+<li>target指向点击目标</li>
+<li>currentTarget始终指向事件的监听者</li>
+</ul>
+<h3 id="jsonp">JSONP</h3>
+<p>兼容性好，但是只支持get方法</p>
+<p>JSONP的原理：利用<code>&lt;script&gt;</code>标签没有跨域限制的“漏洞”来达到与第三方通讯的目的，后台返回的JSON数据使用前端的“方法”包裹起来返还，前端调用后直接执行改方法</p>
+<h3 id="cors">CORS</h3>
+<h4 id="兼容性ie10">兼容性：IE10+</h4>
+<pre><code class="language-javascript">var xhr = new XMLHttpRequest(); // IE8/9需用window.XDomainRequest兼容
+
+// 前端设置是否带cookie
+xhr.withCredentials = true;
+
+xhr.open('post', 'http://www.domain2.com:8080/login', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.send('user=admin');
+
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 &amp;&amp; xhr.status == 200) {
+        alert(xhr.responseText);
+    }
+};
+</code></pre>
+<h4 id="ie89">IE8/9:</h4>
+<pre><code class="language-javascript">if(window.XDomainRequest){
+  var xdr = new XDomainRequest();
+
+  xdr.open(&quot;get&quot;, &quot;http://example.com/api/method&quot;);
+
+  xdr.onprogress = function () {
+    //当请求中发送方法和onload事件中有进展时的处理程序
+  };
+
+  xdr.ontimeout = function () { 
+    //当请求超时时的事件处理程序
+  };
+
+  xdr.onerror = function () { 
+    //当请求发生错误时的处理程序
+  };
+
+  xdr.onload = function() {
+    //success(xdr.responseText);
+    //当服务器端的响应被完整接收时的处理程序
+  }
+
+  setTimeout(function () {
+    xdr.send();
+  }, 0);
+}
+</code></pre>
+<h3 id="call-apply-bind-区别">call &amp; apply &amp; bind 区别</h3>
+<p>call() 方法调用一个函数，其具有一个指定的this值和分别提供的参数。</p>
+<p><code>fun.call(thisArg, arg1, arg2, ...)</code></p>
+<p>apply() 方法调用一个函数，其具有一个指定的this值，以及作为一个数组提供的参数。</p>
+<p><code>fun.apply(thisArg, [argsArray])</code></p>
+<p>bind() 方法创建一个新的函数，当这个函数被调用时，将其this关键字设置为提供的值，在调用新函数时，给定的参数序列排在提供的参数序列前面。</p>
+<p><code>fun.bind(thisArg, arg1, arg2, ...)</code></p>
+<p>区别：<br>
+call、apply方法是在调用时使用，bind是在创造函数时使用。<br>
+除去指定this值参数外，call、bind参数是分别提供的，apply参数是一个数组。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B">什么是盒子模型？</a></li>
+<li><a href="#flex-%E5%B8%83%E5%B1%80">flex 布局</a></li>
+<li><a href="#%E6%9C%AA%E7%9F%A5%E5%AE%BD%E9%AB%98%E7%9A%84%E5%AD%90%E5%85%83%E7%B4%A0%E5%B7%A6%E5%8F%B3%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">未知宽高的子元素左右垂直居中</a></li>
+<li><a href="#%E5%8E%9F%E5%9E%8B%E9%93%BE-%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E5%AE%9E%E4%BE%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">原型链、原型对象、构造函数、实例之间的关系</a></li>
+<li><a href="#dom%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F">DOM事件绑定的几种方式</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8Ehttp20websockethttps">关于http2.0,websocket,https</a></li>
+<li><a href="#http%E7%8A%B6%E6%80%81%E7%A0%81%E7%9A%84%E5%90%AB%E4%B9%89">http状态码的含义</a></li>
+<li><a href="#dom%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84target%E4%B8%8Ecurrenttarget%E7%9A%84%E5%8C%BA%E5%88%AB">DOM事件中的target与currentTarget的区别</a></li>
+<li><a href="#jsonp">JSONP</a></li>
+<li><a href="#cors">CORS</a>
+<ul>
+<li><a href="#%E5%85%BC%E5%AE%B9%E6%80%A7ie10">兼容性：IE10+</a></li>
+<li><a href="#ie89">IE8/9:</a></li>
+</ul>
+</li>
+<li><a href="#call-apply-bind-%E5%8C%BA%E5%88%AB">call &amp; apply &amp; bind 区别</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/xiang-mu-zhong-chou-chi-chu-fu-yong-de-yi-xie-fang-fa/">
+              <h3 class="post-title">
+                项目中抽离出复用的一些方法
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

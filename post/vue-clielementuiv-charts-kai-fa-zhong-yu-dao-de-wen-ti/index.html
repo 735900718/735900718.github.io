@@ -1,0 +1,351 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vue-cli+elementUI+v-charts开发中遇到的问题 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vue-cli+elementUI+v-charts开发中遇到的问题 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="最近在开发的新项目中，前后端分离了，终于可以愉快的折腾了！
+
+vue
+1.重定向
+config/index.js中找到proxyTable添加
+'/api': {
+    target: '测试ip',
+    changeOrigin: ..." />
+    <meta name="keywords" content="vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vue-cli+elementUI+v-charts开发中遇到的问题
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-06-29
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>最近在开发的新项目中，前后端分离了，终于可以愉快的折腾了！</p>
+<!-- more -->
+<h2 id="vue">vue</h2>
+<h3 id="1重定向">1.重定向</h3>
+<p>config/index.js中找到proxyTable添加</p>
+<pre><code class="language-javascript">'/api': {
+    target: '测试ip',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api': ''
+    }
+},
+</code></pre>
+<p>可以将<code>/api</code>请求都重定向到测试ip下</p>
+<h3 id="2无需打包的静态资源放到static下">2.无需打包的静态资源放到static下</h3>
+<h3 id="3图片路径">3.图片路径</h3>
+<p>直接在行内样式中引用出错时</p>
+<pre><code class="language-vue">&lt;!--错误--&gt;
+&lt;div style=&quot;background-image:url('../assets/xxx.png')&gt;&lt;/div&gt;
+&lt;!--正确--&gt;
+&lt;div :style=&quot;{backgroundImage: 'url(' + image + ')'}&quot;&gt;&lt;/div&gt;
+
+data () {
+    return {
+        image: require('../assets/xxx.png')
+    }
+}
+</code></pre>
+<h3 id="4eventbus">4.eventBus</h3>
+<pre><code class="language-javascript">//main.js 
+window.eventBus = new Vue();
+
+//component 1
+eventBus.$emit('pass1', 'from component 1');
+
+//component 2
+eventBus.$on('pass1', function(data) {
+    console.log(data); //=&gt; 'from component 1'
+})
+</code></pre>
+<h3 id="5部分css样式打包后不兼容">5.部分CSS样式打包后不兼容</h3>
+<pre><code class="language-json">// package.json
+&quot;browserslist&quot;: [
+    &quot;&gt; 1%&quot;,
+    &quot;last 2 versions&quot;,
+    &quot;last 10 Chrome versions&quot;,
+    &quot;last 5 Firefox versions&quot;,
+    &quot;Safari &gt;= 6&quot;,
+    &quot;ie &gt; 8&quot;
+]
+</code></pre>
+<h2 id="v-charts">v-charts</h2>
+<p>实现以下需求<br>
+<img src="http://omwf269fd.bkt.clouddn.com/v-charts.png" alt="v-charts" loading="lazy"></p>
+<h3 id="数据">数据</h3>
+<pre><code class="language-javascript">:data=&quot;{
+    columns: ['名称', '区域流量', '设备', '业务', '系统软件'],
+    rows: [
+      { 
+        '名称': '区域流量', 
+        '区域流量': 14, 
+      },
+      {
+        '名称': '设备', 
+        '设备': 13,
+      },
+      {
+        '名称': '业务', 
+        '业务': 0, 
+      },
+      {
+        '名称': '系统软件', 
+        '系统软件': 3
+      },
+    ]
+}&quot; 
+:extend=&quot;{
+    series: {
+        barGap: '-100%'
+    }
+}&quot;
+</code></pre>
+<h3 id="修改柱体颜色及其上方字体颜色">修改柱体颜色及其上方字体颜色</h3>
+<pre><code class="language-javascript">:extend=&quot;{
+    color: [
+        {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+                offset: 0, color: 'rgba(78, 144, 253, 1)' // 0% 处的颜色
+            }, {
+                offset: 1, color: 'rgba(78, 144, 253, .2)' // 100% 处的颜色
+            }]
+        }, 
+        {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+                offset: 0, color: 'rgba(169, 77, 248, 1)' // 0% 处的颜色
+            }, {
+                offset: 1, color: 'rgba(169, 77, 248, .2)' // 100% 处的颜色
+            }]
+        },
+        {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+                offset: 0, color: 'rgba(74, 229, 252, 1)' // 0% 处的颜色
+            }, {
+                offset: 1, color: 'rgba(74, 229, 252, .2)' // 100% 处的颜色
+            }]
+        },
+        {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+                offset: 0, color: 'rgba(122, 255, 141, 1)' // 0% 处的颜色
+                }, {
+                offset: 1, color: 'rgba(122, 255, 141, .2)' // 100% 处的颜色
+            }]
+        }
+    ],
+    
+    series: {
+        label: {
+            show: true,     //显示柱体文字
+            position: 'top',   //显示文字在上方
+            color: 'sadfas'     //关键是这里，color随便写点字符串就可以跟随主体颜色了，我也不知道为什么
+        }
+    }
+}&quot;
+</code></pre>
+<h3 id="自定义字体">自定义字体</h3>
+<p>需要注意的是自定义字体不能用数字开头，否则将设置失败，原设置的字体名字叫'315-CAI978'一直没有成功，改为'CAI978'后成功了</p>
+<h3 id="值为0时显示">值为0时显示</h3>
+<pre><code class="language-javascript">:extend=&quot;{
+    series: {
+        barMinHeight: 1 // 设置最小高度后就显示了
+    }
+}&quot;
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#vue">vue</a>
+<ul>
+<li><a href="#1%E9%87%8D%E5%AE%9A%E5%90%91">1.重定向</a></li>
+<li><a href="#2%E6%97%A0%E9%9C%80%E6%89%93%E5%8C%85%E7%9A%84%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%94%BE%E5%88%B0static%E4%B8%8B">2.无需打包的静态资源放到static下</a></li>
+<li><a href="#3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84">3.图片路径</a></li>
+<li><a href="#4eventbus">4.eventBus</a></li>
+<li><a href="#5%E9%83%A8%E5%88%86css%E6%A0%B7%E5%BC%8F%E6%89%93%E5%8C%85%E5%90%8E%E4%B8%8D%E5%85%BC%E5%AE%B9">5.部分CSS样式打包后不兼容</a></li>
+</ul>
+</li>
+<li><a href="#v-charts">v-charts</a>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE">数据</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E6%9F%B1%E4%BD%93%E9%A2%9C%E8%89%B2%E5%8F%8A%E5%85%B6%E4%B8%8A%E6%96%B9%E5%AD%97%E4%BD%93%E9%A2%9C%E8%89%B2">修改柱体颜色及其上方字体颜色</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93">自定义字体</a></li>
+<li><a href="#%E5%80%BC%E4%B8%BA0%E6%97%B6%E6%98%BE%E7%A4%BA">值为0时显示</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/mac-lian-jie-linux-fu-wu-qi/">
+              <h3 class="post-title">
+                 mac连接linux服务器
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

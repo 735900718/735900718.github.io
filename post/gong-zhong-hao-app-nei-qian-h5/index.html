@@ -1,0 +1,245 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>公众号APP内嵌H5 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="公众号APP内嵌H5 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="最近的工作老和微信有关，不是小程序就是公众号的，微信的东西是真难用:(
+
+单独建立一个跳转到app的页面
+
+页面中使用a做跳转，具体路径需要APP端提供
+
+&lt;a href=&quot;weixin://&quot;&gt;跳转到微信&..." />
+    <meta name="keywords" content="微信" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              公众号APP内嵌H5
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-08-27
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/hPQ6k_c9u/" class="post-tag">
+                  # 微信
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>最近的工作老和微信有关，不是小程序就是公众号的，微信的东西是真难用:(</p>
+<!-- more -->
+<h3 id="单独建立一个跳转到app的页面">单独建立一个跳转到app的页面</h3>
+<ol>
+<li>页面中使用a做跳转，具体路径需要APP端提供</li>
+</ol>
+<pre><code class="language-html">&lt;a href=&quot;weixin://&quot;&gt;跳转到微信&lt;/a&gt;
+</code></pre>
+<ol start="2">
+<li>微信浏览器需要判断是否显示引导到浏览器页面打开：</li>
+</ol>
+<pre><code class="language-javascript">var u = navigator.userAgent;
+
+//android终端
+export const isAndroid = u.indexOf('Android') &gt; -1 || u.indexOf('Adr') &gt; -1; 
+
+//ios终端
+export const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); 
+
+//微信浏览器
+export const isWechat = u.toLowerCase().match(/MicroMessenger/i) == &quot;micromessenger&quot;;
+</code></pre>
+<h3 id="解决微信浏览器中遇到的问题">解决微信浏览器中遇到的问题</h3>
+<blockquote>
+<p>这里遇到个问题，微信跳转到浏览器页面后地址不是引导页面的地址（例如路径:从'/#/' 到'/#/a' 再到'/#/b'后，使用浏览器打开地址依然是'/#/'</p>
+</blockquote>
+<ol>
+<li>vue-router模式需要改为history</li>
+</ol>
+<pre><code class="language-javascript">new Router({
+    mode: 'history',
+    routes: []
+})
+</code></pre>
+<ol start="2">
+<li>引导页面需要replace刷新一下</li>
+</ol>
+<pre><code class="language-javascript">created() {
+    let _href = window.location.href;
+    if (_href.indexOf('&amp;__replace=1') &lt;= -1) {
+        window.location.replace(_href + '&amp;__replace=1')
+    }
+}
+</code></pre>
+<ol start="3">
+<li>解决刷新页面后vuex中缓存的数据会清除的问题</li>
+</ol>
+<pre><code class="language-javascript">//储存要临时缓存的数据（可以在replace前储存）
+sessionStorage.setItem(&quot;store&quot;, JSON.stringify(this.$store.state))
+//读取缓存中的数据（在app.vue中读取写入vuex）
+if (sessionStorage.getItem(&quot;store&quot;)) {
+    this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem(&quot;store&quot;))))
+}
+</code></pre>
+<h4 id="或者直接写个静态页面也行"><s>（或者直接写个静态页面也行）</s></h4>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%8D%95%E7%8B%AC%E5%BB%BA%E7%AB%8B%E4%B8%80%E4%B8%AA%E8%B7%B3%E8%BD%AC%E5%88%B0app%E7%9A%84%E9%A1%B5%E9%9D%A2">单独建立一个跳转到app的页面</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E5%BE%AE%E4%BF%A1%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98">解决微信浏览器中遇到的问题</a>
+<ul>
+<li><a href="#%E6%88%96%E8%80%85%E7%9B%B4%E6%8E%A5%E5%86%99%E4%B8%AA%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E4%B9%9F%E8%A1%8C"><s>（或者直接写个静态页面也行）</s></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/mpvue-kai-fa-xiao-cheng-xu/">
+              <h3 class="post-title">
+                mpvue开发小程序
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

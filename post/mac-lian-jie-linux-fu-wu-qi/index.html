@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> mac连接linux服务器 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title=" mac连接linux服务器 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1.直接使用终端：
+连接：
+ssh 用户名@linux服务器ip
+上传文件：
+scp 文件名 用户名@linux服务器ip:目标路径
+
+2.使用工具：
+配置sshpass：
+
+安装sshpass
+终端进入sshpass解压后的目录
+./co..." />
+    <meta name="keywords" content="服务器" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+               mac连接linux服务器
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-06-27
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/WSAFKCIbE/" class="post-tag">
+                  # 服务器
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h3 id="1直接使用终端">1.直接使用终端：</h3>
+<p>连接：<br>
+<code>ssh 用户名@linux服务器ip</code></p>
+<p>上传文件：<br>
+<code>scp 文件名 用户名@linux服务器ip:目标路径</code></p>
+<!-- more -->
+<h3 id="2使用工具">2.使用工具：</h3>
+<h4 id="配置sshpass">配置sshpass：</h4>
+<ol>
+<li>安装<a href="https://sourceforge.net/projects/sshpass/">sshpass</a></li>
+<li>终端进入sshpass解压后的目录</li>
+<li><code>./configure</code></li>
+<li><code>make install</code></li>
+<li><code>sshpass</code> 查看是否安装成功</li>
+</ol>
+<h4 id="配置密码文件">配置密码文件:</h4>
+<p>任意目录下新建文件，内容为服务器密码（如：~/password/linux-pwd）</p>
+<h4 id="配置iterm2">配置iTerm2</h4>
+<ul>
+<li>iTerm2 &gt; Profiles &gt; Open Profiles &gt; Edit Profiles 添加新配置文件</li>
+<li>Name 填写服务器标识名称</li>
+<li>command 添加执行命令 <code>/usr/local/bin/sshpass -f ~/password/linux-pwd ssh -p22 用户名@linux服务器ip</code>
+<ul>
+<li><code>/usr/local/bin/sshpass</code> 是sshpass执行文件的路径</li>
+<li><code>-f</code> 是告诉sshpass加载文件</li>
+<li><code>~/password/linux-pwd</code> 就是要加载的的密码文件</li>
+</ul>
+</li>
+<li>保存后直接使用 iTerm2 &gt; Profiles &gt; Name 连接linux</li>
+</ul>
+<h4 id="配置filezilla">配置Filezilla:</h4>
+<ol>
+<li>文件 &gt; 站点管理器 &gt; 新站点</li>
+<li>主机 填写 linux 服务器ip</li>
+<li>协议 使用SFTP-SSH协议</li>
+<li>登录类型 正常</li>
+<li>用户、密码 填写liunx服务器用户密码</li>
+<li>连接即可便捷得传输文件了</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF">1.直接使用终端：</a></li>
+<li><a href="#2%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7">2.使用工具：</a>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AEsshpass">配置sshpass：</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E6%96%87%E4%BB%B6">配置密码文件:</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEiterm2">配置iTerm2</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEfilezilla">配置Filezilla:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/li-yong-tolocalestring-jiang-number-ge-shi-hua/">
+              <h3 class="post-title">
+                利用toLocaleString将number格式化
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

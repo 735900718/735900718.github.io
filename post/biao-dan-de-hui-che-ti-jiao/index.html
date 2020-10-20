@@ -1,0 +1,225 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>表单的回车=提交？！ | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="表单的回车=提交？！ | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="HTML页面中的form表单用于提交数据给服务器
+form表单在一些奇特的化学反应下会成精，自行向它大王（服务器）报告，这个妖艳的贱货，我之前怎么没看出来呢:(   前段时间做表单验证的时候，还是同事给我说表单会自动提交的事情。。
+
+
+化学..." />
+    <meta name="keywords" content="html" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              表单的回车=提交？！
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-04-05
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/AJFzh8WYb/" class="post-tag">
+                  # html
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>HTML页面中的form表单用于提交数据给服务器</p>
+<p>form表单在一些奇特的化学反应下会成精，自行向它大王（服务器）报告，这个妖艳的贱货，我之前怎么没看出来呢:(   前段时间做表单验证的时候，还是同事给我说表单会自动提交的事情。。</p>
+<!-- more -->
+<hr>
+<h4 id="化学反应一">化学反应一：</h4>
+<p>当form内有且只有一个input文本输入框时，在这个input中按下回车就会自动提交表单；</p>
+<pre>
+<form>
+	<input type="text" placeholder="type='text'">
+</form>
+</pre>
+<h4 id="化学反应二">化学反应二：</h4>
+<p>当form内有type=&quot;submit&quot;提交按钮时，在input输入框内回车即是提交；</p>
+<pre>
+<form>
+	<input type="text" placeholder="type='text'">
+	<input type="text" placeholder="type='text'">
+	<button type="submit">type="submit"</button>
+</form>
+</pre>
+<h4 id="化学反应三">化学反应三：</h4>
+<p>当form内有且只有一个type=&quot;button&quot;按钮时，在input输入框内按下回车就会提交；</p>
+<pre>
+<form>
+	<input type="text" placeholder="type='text'">
+	<input type="text" placeholder="type='text'">
+	<button>button</button>
+</form>
+</pre>
+<h4 id="结果">结果：</h4>
+<p>妈蛋！我辛苦设定在提交按钮点击时的验证功能就被这个回车绕过去了= =#</p>
+<h4 id="解决方法">解决方法：</h4>
+<p>1、给form表单添加 onsubmit=&quot;return false&quot; 就可以防止提交了；</p>
+<p>2、添加两个以上的input或者button就好了= =；</p>
+<p>以上两个方法虽然能解决问题，但提交起来就不太方便了，还是直接用JS比较合适：</p>
+<pre>
+document.onkeydown=function(e){ 
+	if(e.keyCode==13){ 
+		return false;
+	} 
+} 
+</pre>
+<p>SO~直接屏蔽掉回车就好了！  话说为什么会出现自动提交的情况呢。。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E4%B8%80">化学反应一：</a></li>
+<li><a href="#%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E4%BA%8C">化学反应二：</a></li>
+<li><a href="#%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E4%B8%89">化学反应三：</a></li>
+<li><a href="#%E7%BB%93%E6%9E%9C">结果：</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">解决方法：</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

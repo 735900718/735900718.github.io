@@ -1,0 +1,269 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>项目中抽离出复用的一些方法 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="项目中抽离出复用的一些方法 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="响应式/placeholder兼容/数字增加动画/监听滚屏方法
+
+响应式字体
+最近接手的项目都是响应式开发的，既然响应式，那必然少不了rem了~代码也比较简单了：
+  function font() {
+    var oWidth = w..." />
+    <meta name="keywords" content="js" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              项目中抽离出复用的一些方法
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-07-10
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/GJvyCjr9T/" class="post-tag">
+                  # js
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>响应式/placeholder兼容/数字增加动画/监听滚屏方法</p>
+<!--more-->
+<h3 id="响应式字体">响应式字体</h3>
+<p>最近接手的项目都是响应式开发的，既然响应式，那必然少不了rem了~代码也比较简单了：</p>
+<pre><code class="language-javascript">  function font() {
+    var oWidth = window.innerWidth;
+    document.documentElement.style.fontSize = oWidth * 100 / 1920 + 'px'; //设计宽度为1920px
+  }
+</code></pre>
+<h3 id="ie的placeholder">IE的placeholder</h3>
+<p>垃圾IE，placeholder这么好用的属性居然没有- -！依然是改写alert的思想，其他浏览器有placeholder，就正常使用，在IE下根据placeholder属性，为其添加focus/blur方法，以求模拟其效果：</p>
+<pre><code class="language-javascript">  //根据Input是否有placeholder属性，添加方法
+  if (!('placeholder' in document.createElement('input'))) {
+    (function() {
+      //这里偷懒，直接用了jquery的方法，修改成原生也很简单，就不改了
+      var $placeholder = $('[placeholder]')
+      $.each($placeholder, function(key, val) {
+        val.value = val.attributes['placeholder'].value
+        val.onfocus = function() {
+          //这个判断有个弊端，就是用户填写不能与placeholder一致，感觉无伤大雅。。因为一般也不会让输入placeholder的内容的吧。。。
+          if (val.value === val.attributes['placeholder'].value) {
+            val.value = ''
+          }
+        }
+        val.onblur = function() {
+          if (val.value === '') {
+            val.value = val.attributes['placeholder'].value
+          }
+        }
+      })
+    })();
+  }
+</code></pre>
+<h3 id="数字增加动画">数字增加动画</h3>
+<p><img src="http://omwf269fd.bkt.clouddn.com/countTo.gif" alt="'示例图片'" loading="lazy"><br>
+这个就比较有意思了，是一个让DOM里的数字从小慢慢变大，最终呈现预设数值的一个方法，在网页中一些具有冲击性数字时使用，效果拔群~</p>
+<pre><code class="language-javascript">  function countTo(option) {
+    var opt = {
+      DOM: option.DOM,      //使用方法的dom元素
+      min: option.min || 0, //起始值，可以不写，默认0
+      max: option.max || option.DOM.innerHTML,//结束值，可以不写，默认DOM现有的HTML内容
+      time: option.time || 1000   //动画执行时间，单位ms，默认1s执行完毕
+    }
+    if (opt.DOM === undefined || opt.DOM.nodeType !== 1) {
+      console.error('countTo函数的DOM参数必填，且值为一个DOM元素');
+      return;
+    }
+    opt.boot = (opt.max - opt.min) / (opt.time / 20)
+    var timer = setInterval(function(){
+      opt.min += opt.boot;
+      opt.DOM.innerHTML = Math.floor(opt.min);
+      if (opt.min &gt;= opt.max) {
+        opt.DOM.innerHTML = opt.max;
+        clearInterval(timer)
+      }
+    },20)
+  }
+</code></pre>
+<h3 id="监听滚屏方法">监听滚屏方法</h3>
+<p>名字比较抽象哈。。形容一下这个方法的话，应该就像是一个机器上的齿轮，目的就是为DOM在监听滚动事件时，判断是否可以执行滚动关键方法了的。。还是有些绕啊！ 算了，直接上代码了：</p>
+<pre><code class="language-javascript">  function scrollWindow(option){
+    var opt = {
+      DOM: option.DOM
+    }
+    if (opt.DOM === undefined || opt.DOM.nodeType !== 1) {
+      console.error('scrollWindow函数的DOM参数必填，且值为一个DOM容器');
+      return;
+    }
+    if ($(document).scrollTop() &gt;= $(opt.DOM).offset().top - $(opt.DOM).height()) {
+      return true;
+    }else {
+      return false;
+    }
+  }
+</code></pre>
+<p>PS： 这个滚动方法和上面那个数字方法放在一起使用效果就特别好，代码大概就是下面这样的：</p>
+<pre><code class="language-javascript">  window.addEventListener('scroll',function(){
+    if (scrollWindow(option)) {
+      countTo(option)
+    }
+  })
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%93%8D%E5%BA%94%E5%BC%8F%E5%AD%97%E4%BD%93">响应式字体</a></li>
+<li><a href="#ie%E7%9A%84placeholder">IE的placeholder</a></li>
+<li><a href="#%E6%95%B0%E5%AD%97%E5%A2%9E%E5%8A%A0%E5%8A%A8%E7%94%BB">数字增加动画</a></li>
+<li><a href="#%E7%9B%91%E5%90%AC%E6%BB%9A%E5%B1%8F%E6%96%B9%E6%B3%95">监听滚屏方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/css-jian-bian-bian-kuang/">
+              <h3 class="post-title">
+                CSS渐变边框
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

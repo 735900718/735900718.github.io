@@ -1,0 +1,231 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vue自动化全局注册组件 | Gridea</title>
+<link rel="shortcut icon" href="https://735900718.github.io/favicon.ico?v=1603172414191">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://735900718.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vue自动化全局注册组件 | Gridea - Atom Feed" href="https://735900718.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="自动化注册的方法在vue官方文档有写，这里做下笔记，加深印象。
+
+实际项目中，可能会出现组件越来越多的情况，而每添加一个新的组件，就需要在main.js中，引入并注册一次，过程会非常繁琐。
+官方文档是怎么做的？
+
+利用webpack获取目录..." />
+    <meta name="keywords" content="vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://735900718.github.io">
+  <img class="avatar" src="https://735900718.github.io/images/avatar.png?v=1603172414191" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vue自动化全局注册组件
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-08-03
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://735900718.github.io/tag/0qwzv8W4D/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>自动化注册的方法在<a href="https://vuefe.cn/v2/guide/components-registration.html#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6">vue官方文档</a>有写，这里做下笔记，加深印象。</p>
+<!-- more -->
+<p>实际项目中，可能会出现组件越来越多的情况，而每添加一个新的组件，就需要在main.js中，引入并注册一次，过程会非常繁琐。</p>
+<h3 id="官方文档是怎么做的">官方文档是怎么做的？</h3>
+<ol>
+<li>利用webpack获取目录下的文件</li>
+</ol>
+<pre><code class="language-javascript">const files = require.context(
+    //要自动化注册组件的文件夹的路径
+    './components',
+    //是否查找子文件夹
+    false,
+    //用于匹配查找文件名的正则表达式
+    /\.(vue|js)$/
+)
+</code></pre>
+<ol start="2">
+<li>遍历获取到的文件，对其进行批量操作</li>
+</ol>
+<pre><code class="language-javascript">files.keys().forEach(fileName =&gt; {
+  // 获取组件配置
+  const componentConfig = files(fileName)
+
+  // 取得组件名
+  const componentName = 
+      // 将文件名前面的 `'./` 和扩展名剥离
+      fileName.replace(/^\.\/(.*)\.\w+$/, '$1')
+
+  // 以全局方式注册组件
+  Vue.component(
+    componentName,
+    // 如果组件是通过 `export default` 导出，
+    // 则在 `.default` 中，查找组件选项，
+    // 否则回退至模块根对象中，查找组件选项
+    componentConfig.default || componentConfig
+  )
+})
+</code></pre>
+<h3 id="requirecontext了解一下">require.context了解一下</h3>
+<p>webpack会在构建的时候解析代码中的require.context()，该方法会导出一个require函数，这个函数有三个属性：</p>
+<ul>
+<li>resolve 是一个函数，返回模块的id；</li>
+<li>keys 是一个函数，返回一个数组，包含所有被处理到的模块；</li>
+<li>id 是上下文模块里面所包含的模块 id。<br>
+在注册组件中，只用keys()拿到组件模块遍历注册就可以了。</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84">官方文档是怎么做的？</a></li>
+<li><a href="#requirecontext%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B">require.context了解一下</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://735900718.github.io/post/promise/">
+              <h3 class="post-title">
+                promise
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://735900718.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
